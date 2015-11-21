@@ -13,30 +13,31 @@ import com.owlike.genson.Genson;
 
 import be.ugent.MongoDBSingleton;
 import be.ugent.entitity.Drug;
+import be.ugent.entitity.Symptom;
 
-public class DrugDao {
+public class SymptomDao {
 	private MongoDBSingleton dbSingleton = MongoDBSingleton.getInstance();
 	private DB db = dbSingleton.getTestdb();
 
-	public List<Drug> getAllDrugs(){
-		DBCollection coll = db.getCollection("drug");
+	public List<Symptom> getAllSymptoms(){
+		DBCollection coll = db.getCollection("symptom");
 		DBCursor cursor = coll.find();
-		List<Drug> list = new ArrayList<Drug>();
+		List<Symptom> list = new ArrayList<Symptom>();
 		while (cursor.hasNext()) {
 			DBObject o = cursor.next();
-			Drug drug = new Drug();
+			Symptom drug = new Symptom();
 			drug.setDescription(o.get("description")+"");
 			drug.setName(o.get("name")+"");
-			drug.setDrugID((int)o.get("drugID"));
+			drug.setSymptomID(((int)o.get("symptomID")));
 			list.add(drug);
 		}
 		return list;
 	}
 	
-	public boolean addDrug(Drug drug){
+	public boolean addSymptom(Symptom drug){
 		
 		
-		DBCollection collection = db.getCollection("drug");
+		DBCollection collection = db.getCollection("symptom");
 		// convert JSON to DBObject directly
 		BasicDBObject bdbo = new BasicDBObject();
 		bdbo.put("name", drug.getName());
@@ -56,15 +57,15 @@ public class DrugDao {
 		return true;
 	}
 
-	public int getNewDrugID() {
-		DBCollection coll = db.getCollection("drug");
+	public int getNewSymptomID() {
+		DBCollection coll = db.getCollection("symptom");
 		BasicDBObject whereQuery = new BasicDBObject();
 		DBCursor cursor = coll.find(whereQuery);
 		int max = 0;
 		while(cursor.hasNext()){
 			BasicDBObject next = (BasicDBObject) cursor.next();
-			if(max < Double.parseDouble(""+next.get("drugID"))){
-				max = (int)Double.parseDouble(""+next.get("drugID"));
+			if(max < Double.parseDouble(""+next.get("symptomID"))){
+				max = (int)Double.parseDouble(""+next.get("symptomID"));
 			}
 		}
 		return max+1;

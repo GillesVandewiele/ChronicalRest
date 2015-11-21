@@ -16,39 +16,41 @@ import javax.ws.rs.core.Response;
 import com.owlike.genson.Genson;
 
 import be.ugent.dao.DrugDao;
+import be.ugent.dao.TriggerDao;
 import be.ugent.entitity.Drug;
+import be.ugent.entitity.Trigger;
 
-@Path("/DrugService")
-public class DrugService {
-	DrugDao drugDao = new DrugDao();
+@Path("/TriggerService")
+public class TriggerService {
+	TriggerDao TriggerDao = new TriggerDao();
 	Genson genson = new Genson();
 
 	
 	@GET
-	@Path("/drugs")
+	@Path("/Triggers")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public List<Drug> getAllDrugs(@Context HttpHeaders header, @Context HttpServletResponse response) {
+	public List<Trigger> getAllTriggers(@Context HttpHeaders header, @Context HttpServletResponse response) {
 		response.addHeader("Access-Control-Allow-Origin", "*");
-		return drugDao.getAllDrugs();
+		return TriggerDao.getAllTriggers();
 
 	}
 
 	@POST
-	@Path("/drugs")
+	@Path("/Triggers")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Response addUser(Drug drug){
-		System.out.println("Got request to add user: "+genson.serialize(drug));
+	public Response addUser(Trigger trigger){
+		System.out.println("Got request to add Trigger: "+genson.serialize(trigger));
 		
-		Drug toAdd = new Drug();
+		Trigger toAdd = new Trigger();
 		
-		toAdd.setDescription(drug.getDescription());
-		toAdd.setName(drug.getName());
-		toAdd.setDrugID(drugDao.getNewDrugID());
+		toAdd.setDescription(trigger.getDescription());
+		toAdd.setName(trigger.getName());
+		toAdd.setTriggerID(TriggerDao.getNewTriggerID());
 		
 		
 		System.out.println("Created User: "+genson.serialize(toAdd));
-		if(drugDao.addDrug(toAdd)){
-			//return drug successfully created
+		if(TriggerDao.addTrigger(toAdd)){
+			//return Trigger successfully created
 			return Response.status(201).build();
 		}else{
 			//return record was already in database, or was wrong format

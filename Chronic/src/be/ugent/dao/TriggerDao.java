@@ -12,31 +12,31 @@ import com.mongodb.util.JSON;
 import com.owlike.genson.Genson;
 
 import be.ugent.MongoDBSingleton;
-import be.ugent.entitity.Drug;
+import be.ugent.entitity.Trigger;
 
-public class DrugDao {
+public class TriggerDao {
 	private MongoDBSingleton dbSingleton = MongoDBSingleton.getInstance();
 	private DB db = dbSingleton.getTestdb();
 
-	public List<Drug> getAllDrugs(){
-		DBCollection coll = db.getCollection("drug");
+	public List<Trigger> getAllTriggers(){
+		DBCollection coll = db.getCollection("trigger");
 		DBCursor cursor = coll.find();
-		List<Drug> list = new ArrayList<Drug>();
+		List<Trigger> list = new ArrayList<Trigger>();
 		while (cursor.hasNext()) {
 			DBObject o = cursor.next();
-			Drug drug = new Drug();
+			Trigger drug = new Trigger();
 			drug.setDescription(o.get("description")+"");
 			drug.setName(o.get("name")+"");
-			drug.setDrugID((int)o.get("drugID"));
+			drug.setTriggerID(((int)o.get("triggerID")));
 			list.add(drug);
 		}
 		return list;
 	}
 	
-	public boolean addDrug(Drug drug){
+	public boolean addTrigger(Trigger drug){
 		
 		
-		DBCollection collection = db.getCollection("drug");
+		DBCollection collection = db.getCollection("trigger");
 		// convert JSON to DBObject directly
 		BasicDBObject bdbo = new BasicDBObject();
 		bdbo.put("name", drug.getName());
@@ -56,15 +56,15 @@ public class DrugDao {
 		return true;
 	}
 
-	public int getNewDrugID() {
-		DBCollection coll = db.getCollection("drug");
+	public int getNewTriggerID() {
+		DBCollection coll = db.getCollection("trigger");
 		BasicDBObject whereQuery = new BasicDBObject();
 		DBCursor cursor = coll.find(whereQuery);
 		int max = 0;
 		while(cursor.hasNext()){
 			BasicDBObject next = (BasicDBObject) cursor.next();
-			if(max < Double.parseDouble(""+next.get("drugID"))){
-				max = (int)Double.parseDouble(""+next.get("drugID"));
+			if(max < Double.parseDouble(""+next.get("triggerID"))){
+				max = (int)Double.parseDouble(""+next.get("triggerID"));
 			}
 		}
 		return max+1;

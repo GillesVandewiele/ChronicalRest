@@ -4,24 +4,24 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "patient")
-public class Drug implements Serializable {
+@XmlRootElement(name = "symptom")
+public class Symptom implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private int drugID;
+	private int symptomID;
 	private String name;
 	private String description;
 		
-	public Drug() {
+	public Symptom() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public int getDrugID() {
-		return drugID;
+	public int getSymptomID() {
+		return symptomID;
 	}
 
-	public void setDrugID(int drugID) {
-		this.drugID = drugID;
+	public void setSymptomID(int drugID) {
+		this.symptomID = drugID;
 	}
 
 	public String getName() {
