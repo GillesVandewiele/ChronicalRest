@@ -1,5 +1,8 @@
 package be.ugent.dao;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -7,7 +10,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
-import com.owlike.genson.Genson;
 
 import be.ugent.MongoDBSingleton;
 import be.ugent.entitity.Patient;
@@ -26,16 +28,19 @@ public class PatientDao {
 		
 		System.out.println(object+"");
 		if(object != null){
-			patient.setBirthDate(""+object.get("birthDate"));
-			patient.setEmployed((boolean)object.get("isEmployed"));
-			patient.setFirstName(firstName);
-			patient.setLastName(lastName);
-			patient.setPatientID((int)Double.parseDouble(""+object.get("patientID")));
-			patient.setMale((boolean)object.get("isMale"));
-			patient.setEmail(""+object.get("email"));
-			patient.setAdvice(""+object.get("advice"));
-			patient.setDiagnosis(""+object.get("diagnosis"));
-			patient.setPassword(""+object.get("password"));
+			Gson gson = new Gson();
+			patient = gson.fromJson(object.toString(), Patient.class);
+//			
+//			patient.setBirthDate(""+object.get("birthDate"));
+//			patient.setEmployed((boolean)object.get("isEmployed"));
+//			patient.setFirstName(firstName);
+//			patient.setLastName(lastName);
+//			patient.setPatientID((int)Double.parseDouble(""+object.get("patientID")));
+//			patient.setMale((boolean)object.get("isMale"));
+//			patient.setEmail(""+object.get("email"));
+//			patient.setAdvice(""+object.get("advice"));
+//			patient.setDiagnosis(""+object.get("diagnosis"));
+//			patient.setPassword(""+object.get("password"));
 			return patient;
 		}else{
 			return null;
@@ -49,16 +54,19 @@ public class PatientDao {
 		whereQuery.put("email", email);
 		DBObject object= coll.findOne(whereQuery);
 		if(object != null){
-			patient.setBirthDate(""+object.get("birthDate"));
-			patient.setEmployed((boolean)object.get("isEmployed"));
-			patient.setFirstName(""+object.get("firstName"));
-			patient.setLastName(""+object.get("lastName"));
-			patient.setPatientID((int)Double.parseDouble(""+object.get("patientID")));
-			patient.setMale((boolean)object.get("isMale"));
-			patient.setEmail(email);
-			patient.setAdvice(""+object.get("advice"));
-			patient.setDiagnosis(""+object.get("diagnosis"));
-			patient.setPassword(""+object.get("password"));
+			Gson gson = new Gson();
+			patient = gson.fromJson(object.toString(), Patient.class);
+////			
+//			patient.setBirthDate(""+object.get("birthDate"));
+//			patient.setEmployed((boolean)object.get("isEmployed"));
+//			patient.setFirstName(""+object.get("firstName"));
+//			patient.setLastName(""+object.get("lastName"));
+//			patient.setPatientID((int)Double.parseDouble(""+object.get("patientID")));
+//			patient.setMale((boolean)object.get("isMale"));
+//			patient.setEmail(email);
+//			patient.setAdvice(""+object.get("advice"));
+//			patient.setDiagnosis(""+object.get("diagnosis"));
+//			patient.setPassword(""+object.get("password"));
 			
 			return patient;
 		}else{
@@ -94,7 +102,7 @@ public class PatientDao {
 		if(isValidUser(patient)){
 //			doStore
 			db.getCollection("patient").insert((BasicDBObject)JSON.parse(patient.toString()));
-//			System.out.println("Test storing: "+genson.serialize(patient));
+//			
 			return true;
 		}
 		else{
@@ -108,15 +116,21 @@ public class PatientDao {
 	private boolean isValidUser(Patient patient) {
 		DBCollection coll = db.getCollection("patient");
 		BasicDBObject whereQuery = new BasicDBObject();
-		whereQuery.put("patientID", patient.getPatientID());
-		DBCursor cursor = coll.find(whereQuery);
-		if(cursor.count()>=1){
-			System.out.println("Already a patient with this patientID");
+		if(patient == null){
+			System.err.println("Patient == null to chec if isValidUser");
 			return false;
+		}else if(patient.getPatientID()>=1){
+			whereQuery.put("patientID", patient.getPatientID());
+			DBCursor cursor = coll.find(whereQuery);
+			if(cursor.count()>=1){
+				System.out.println("Already a patient with this patientID");
+				return false;
+			}
 		}
+		
 		whereQuery.clear();
 		whereQuery.put("email", patient.getEmail());
-		cursor = coll.find(whereQuery);
+		DBCursor cursor = coll.find(whereQuery);
 		if(cursor.count()>=1){
 			System.out.println("already a patient with this username in the dabase");
 			return false;
@@ -125,5 +139,26 @@ public class PatientDao {
 			return false;
 		return true;
 		
+	}
+
+	public Patient getPatientFromHeader(String header) {
+		byte[] decoded = Base64.getDecoder().decode(header.split(" ")[1]);
+		String decodedString = new String(decoded, StandardCharsets.UTF_8);
+//		System.out.println("Decoded: " + decodedString);
+
+		String requestEmail = decodedString.split(":")[0];
+		
+		Patient patient = new Patient();
+		DBCollection coll = db.getCollection("patient");
+		BasicDBObject whereQuery = new BasicDBObject();
+		
+		whereQuery.put("email", requestEmail);
+		DBObject object= coll.findOne(whereQuery);
+		if(object != null){
+			Gson gson = new Gson();
+			patient = gson.fromJson(object.toString(), Patient.class);
+			return patient;
+		}else
+			return null;
 	}
 }

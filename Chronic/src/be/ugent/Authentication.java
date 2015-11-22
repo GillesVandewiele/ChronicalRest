@@ -14,19 +14,21 @@ public class Authentication {
 	public static String APIKEY = "FiFoEdUdLOI4D19lj7Vb5pi72dDZf2aB";
 
 	public static boolean isAuthorized(String header) {
-		System.out.println("auth:" + header.split(" ")[1]);
+//		System.out.println("auth:" + header.split(" ")[1]);
 		byte[] decoded = Base64.getDecoder().decode(header.split(" ")[1]);
 		String decodedString = new String(decoded, StandardCharsets.UTF_8);
-		System.out.println("Decoded: " + decodedString);
+//		System.out.println("Decoded: " + decodedString);
 
 		String requestEmail = decodedString.split(":")[0];
-		System.out.println("Request email: " + requestEmail);
+//		System.out.println("Request email: " + requestEmail);
 		String requestRest = decodedString.split(":")[1];
 
 		Patient patient = getPatient(requestEmail);
 		DigestSHA3 md = new DigestSHA3(512); // same as DigestSHA3 md = new
 												// SHA3.Digest256();
-		
+		if(patient==null){
+			return false;
+		}
 		try {
 			md.update((patient.getPassword()+Authentication.APIKEY).getBytes("UTF-8"));
 		} catch (UnsupportedEncodingException e) {
@@ -34,8 +36,8 @@ public class Authentication {
 			e.printStackTrace();
 		}
 		byte[] digest = md.digest();
-		System.out.println("secondpart: "+digest);
-		if (digest.equals(requestRest)) {
+//		System.out.println("secondpart: "+org.bouncycastle.util.encoders.Hex.toHexString(digest));
+		if (org.bouncycastle.util.encoders.Hex.toHexString(digest).equals(requestRest)) {
 			return true;
 		}
 		return false;
