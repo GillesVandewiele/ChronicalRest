@@ -13,6 +13,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.gson.Gson;
 import com.owlike.genson.Genson;
 
 import be.ugent.dao.DrugDao;
@@ -21,7 +22,7 @@ import be.ugent.entitity.Drug;
 @Path("/DrugService")
 public class DrugService {
 	DrugDao drugDao = new DrugDao();
-	Genson genson = new Genson();
+	Gson genson = new Gson();
 
 	
 	@GET
@@ -37,7 +38,7 @@ public class DrugService {
 	@Path("/drugs")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Response addUser(Drug drug){
-		System.out.println("Got request to add user: "+genson.serialize(drug));
+		System.out.println("Got request to add user: "+genson.toJson(drug));
 		
 		Drug toAdd = new Drug();
 		
@@ -46,7 +47,7 @@ public class DrugService {
 		toAdd.setDrugID(drugDao.getNewDrugID());
 		
 		
-		System.out.println("Created User: "+genson.serialize(toAdd));
+		System.out.println("Created User: "+genson.toJson(toAdd));
 		if(drugDao.addDrug(toAdd)){
 			//return drug successfully created
 			return Response.status(201).build();

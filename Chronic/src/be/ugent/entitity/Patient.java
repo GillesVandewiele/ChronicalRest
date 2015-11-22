@@ -16,9 +16,12 @@ public class Patient implements Serializable {
 	private boolean isMale;
 	private String birthDate;
 	private boolean isEmployed;
+	private String password;
+
 	public enum relation{
 		GETROUWD, IN_RELATIE, VRIJGEZEL
 	}
+	private relation relation;
 	private String advice;
 	private String diagnosis;
 	
@@ -115,7 +118,33 @@ public class Patient implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
+
+	public String getPassword() {
+		return password;
+	}
+
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 	
-	
+	@Override
+	public String toString(){
+		String returnString = "{";
+		returnString += "\"patientID\":"+patientID+",\n"+
+		"\"firstName\":\""+firstName+"\",\n"+
+				"\"lastName\":\""+lastName+"\",\n"+
+		"\"email\":\""+email+"\",\n"+
+				"\"isMale\":"+isMale+",\n"+
+		"\"birthDate\":\""+birthDate+"\",\n"+
+				"\"isEmployed\":"+isEmployed+",\n"+
+		"\"password\":\""+password+"\",\n"+
+				"\"relation\":"+relation+",\n"+
+		"\"advice\":\""+advice+"\",\n"+
+				"\"diagnosis\":\""+diagnosis+"\"\n"+
+		"}";
+		return returnString;
+	}
 	
 }

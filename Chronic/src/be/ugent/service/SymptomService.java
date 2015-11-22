@@ -13,7 +13,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.owlike.genson.Genson;
+import com.google.gson.Gson;
 
 import be.ugent.dao.DrugDao;
 import be.ugent.dao.SymptomDao;
@@ -23,7 +23,7 @@ import be.ugent.entitity.Symptom;
 @Path("/SymptomService")
 public class SymptomService {
 	SymptomDao symptomDao = new SymptomDao();
-	Genson genson = new Genson();
+	Gson gson = new Gson();
 
 	
 	@GET
@@ -39,7 +39,7 @@ public class SymptomService {
 	@Path("/Symptoms")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Response addUser(Symptom symptom){
-		System.out.println("Got request to add symptom: "+genson.serialize(symptom));
+		System.out.println("Got request to add symptom: "+gson.toJson(symptom));
 		
 		Symptom toAdd = new Symptom();
 		
@@ -48,7 +48,7 @@ public class SymptomService {
 		toAdd.setSymptomID(symptomDao.getNewSymptomID());
 		
 		
-		System.out.println("Created User: "+genson.serialize(toAdd));
+		System.out.println("Created User: "+gson.toJson(toAdd));
 		if(symptomDao.addSymptom(toAdd)){
 			//return symptom successfully created
 			return Response.status(201).build();

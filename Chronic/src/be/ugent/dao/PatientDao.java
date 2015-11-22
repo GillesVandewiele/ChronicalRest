@@ -1,5 +1,6 @@
 package be.ugent.dao;
 
+import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -25,19 +26,45 @@ public class PatientDao {
 		
 		System.out.println(object+"");
 		if(object != null){
-//			patient.setBirthDate(new Date(""+object.get("birthDate")));
+			patient.setBirthDate(""+object.get("birthDate"));
 			patient.setEmployed((boolean)object.get("isEmployed"));
 			patient.setFirstName(firstName);
 			patient.setLastName(lastName);
 			patient.setPatientID((int)Double.parseDouble(""+object.get("patientID")));
 			patient.setMale((boolean)object.get("isMale"));
-			
+			patient.setEmail(""+object.get("email"));
+			patient.setAdvice(""+object.get("advice"));
+			patient.setDiagnosis(""+object.get("diagnosis"));
+			patient.setPassword(""+object.get("password"));
 			return patient;
 		}else{
 			return null;
 		}
 	}
 	
+	public Patient getPatient(String email){
+		Patient patient = new Patient();
+		DBCollection coll = db.getCollection("patient");
+		BasicDBObject whereQuery = new BasicDBObject();
+		whereQuery.put("email", email);
+		DBObject object= coll.findOne(whereQuery);
+		if(object != null){
+			patient.setBirthDate(""+object.get("birthDate"));
+			patient.setEmployed((boolean)object.get("isEmployed"));
+			patient.setFirstName(""+object.get("firstName"));
+			patient.setLastName(""+object.get("lastName"));
+			patient.setPatientID((int)Double.parseDouble(""+object.get("patientID")));
+			patient.setMale((boolean)object.get("isMale"));
+			patient.setEmail(email);
+			patient.setAdvice(""+object.get("advice"));
+			patient.setDiagnosis(""+object.get("diagnosis"));
+			patient.setPassword(""+object.get("password"));
+			
+			return patient;
+		}else{
+			return null;
+		}
+	}
 	public boolean idExists(int id){
 		DBCollection coll = db.getCollection("patient");
 		BasicDBObject whereQuery = new BasicDBObject();
@@ -66,8 +93,7 @@ public class PatientDao {
 	public boolean storePatient(Patient patient){
 		if(isValidUser(patient)){
 //			doStore
-			Genson genson = new Genson();
-			db.getCollection("patient").insert((BasicDBObject)JSON.parse(genson.serialize(patient)));
+			db.getCollection("patient").insert((BasicDBObject)JSON.parse(patient.toString()));
 //			System.out.println("Test storing: "+genson.serialize(patient));
 			return true;
 		}

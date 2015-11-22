@@ -13,7 +13,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.owlike.genson.Genson;
+import com.google.gson.Gson;
 
 import be.ugent.dao.DrugDao;
 import be.ugent.dao.TriggerDao;
@@ -23,7 +23,7 @@ import be.ugent.entitity.Trigger;
 @Path("/TriggerService")
 public class TriggerService {
 	TriggerDao TriggerDao = new TriggerDao();
-	Genson genson = new Genson();
+	Gson gson = new Gson();
 
 	
 	@GET
@@ -39,7 +39,7 @@ public class TriggerService {
 	@Path("/Triggers")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Response addUser(Trigger trigger){
-		System.out.println("Got request to add Trigger: "+genson.serialize(trigger));
+		System.out.println("Got request to add Trigger: "+gson.toJson(trigger));
 		
 		Trigger toAdd = new Trigger();
 		
@@ -48,7 +48,7 @@ public class TriggerService {
 		toAdd.setTriggerID(TriggerDao.getNewTriggerID());
 		
 		
-		System.out.println("Created User: "+genson.serialize(toAdd));
+		System.out.println("Created User: "+gson.toJson(toAdd));
 		if(TriggerDao.addTrigger(toAdd)){
 			//return Trigger successfully created
 			return Response.status(201).build();

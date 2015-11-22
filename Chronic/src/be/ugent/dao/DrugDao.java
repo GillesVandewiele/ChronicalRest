@@ -3,6 +3,7 @@ package be.ugent.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -43,8 +44,8 @@ public class DrugDao {
 		DBCursor curs = collection.find(bdbo);
 		if(curs.count()>0)
 			return false;
-		Genson genson = new Genson();
-		DBObject dbObject = (DBObject) JSON.parse(genson.serialize(drug));
+		Gson genson = new Gson();
+		DBObject dbObject = (DBObject) JSON.parse(genson.toJson(drug));
 		collection.insert(dbObject);
 
 		DBCursor cursorDoc = collection.find();

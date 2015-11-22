@@ -12,8 +12,10 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.gson.Gson;
 import com.owlike.genson.Genson;
 
+import be.ugent.Authentication;
 import be.ugent.dao.PatientDao;
 import be.ugent.entitity.Patient;
 
@@ -26,9 +28,7 @@ public class PatientService {
 	@GET
 	@Path("/patients")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Patient getUser(@QueryParam("firstName") String firstName, @QueryParam("lastName") String lastName,
-			@Context HttpHeaders header, @Context HttpServletResponse response) {
-		response.addHeader("Access-Control-Allow-Origin", "*");
+	public Patient getUser(@QueryParam("firstName") String firstName, @QueryParam("lastName") String lastName) {
 		System.out.println("Patient opgevraagd met naam: " + firstName + " " + lastName);
 		return patientDao.getPatient(firstName, lastName);
 
@@ -37,25 +37,15 @@ public class PatientService {
 	@POST
 	@Path("/patients")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Response addUser(Patient pat){
-		System.out.println("Got request to add user: "+genson.serialize(pat));
-		
-		Patient toAdd = new Patient();
-		
-		
-		toAdd.setBirthDate(pat.getBirthDate());
-		toAdd.setEmployed(pat.isEmployed());
-		toAdd.setFirstName(pat.getFirstName());
-		toAdd.setLastName(pat.getLastName());
-		toAdd.setPatientID(patientDao.getNewId());
-		toAdd.setAdvice(pat.getAdvice());
-		toAdd.setDiagnosis(pat.getDiagnosis());
-		toAdd.setMale(pat.isMale());
-		toAdd.setEmail(pat.getEmail());
-		
-		
-		
-		System.out.println("Created User: "+genson.serialize(toAdd));
+	public Response addUser(String pat, @Context HttpHeaders headers){
+		String header = headers.getRequestHeader("Authorization").get(0);
+		if(!Authentication.isAuthorized(header)){
+			return Response.status(403).build();
+		}
+		System.out.println("Patient requested to add: "+pat.toString());
+		Gson gson = new Gson();
+		Patient toAdd = gson.fromJson(pat.toString(), Patient.class);
+		System.out.println("Patient to add:"+toAdd);
 		if(patientDao.storePatient(toAdd)){
 			//return patient successfully created
 			return Response.status(201).build();
