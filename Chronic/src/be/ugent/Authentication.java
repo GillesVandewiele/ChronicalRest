@@ -14,14 +14,29 @@ public class Authentication {
 	public static String APIKEY = "FiFoEdUdLOI4D19lj7Vb5pi72dDZf2aB";
 
 	public static boolean isAuthorized(String header) {
+		if(header == null){
+			System.out.println("Header for Authorization is null");
+			return false;
+		}
+		String [] headerArray = header.split(" ");
+		if(headerArray.length!=2){
+			System.out.println("Wrong header for Authorization");
+			return false;
+		}
+		
 //		System.out.println("auth:" + header.split(" ")[1]);
-		byte[] decoded = Base64.getDecoder().decode(header.split(" ")[1]);
+		byte[] decoded = Base64.getDecoder().decode(headerArray[1]);
 		String decodedString = new String(decoded, StandardCharsets.UTF_8);
 //		System.out.println("Decoded: " + decodedString);
 
-		String requestEmail = decodedString.split(":")[0];
+		String[] decodedArray = decodedString.split(":");
+		if(decodedArray.length!=2){
+			System.out.println("Wrong header for Authorization: no valid email");
+			return false;
+		}
+		String requestEmail = decodedArray[0];
 //		System.out.println("Request email: " + requestEmail);
-		String requestRest = decodedString.split(":")[1];
+		String requestRest = decodedArray[1];
 
 		Patient patient = getPatient(requestEmail);
 		DigestSHA3 md = new DigestSHA3(512); // same as DigestSHA3 md = new

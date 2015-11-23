@@ -46,7 +46,7 @@ public class PatientService {
 	public Response login(@HeaderParam("Authorization") String header) {
 		if(!Authentication.isAuthorized(header)){
 			return Response.status(403).build();
-		}
+		}		
 //		System.out.println("User ingelogd met email:"+patientDao.getPatientFromHeader(header));
 		Patient retrieved = patientDao.getPatientFromHeader(header);
 		retrieved.setPassword("");
