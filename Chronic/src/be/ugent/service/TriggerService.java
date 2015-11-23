@@ -27,7 +27,7 @@ public class TriggerService {
 
 	
 	@GET
-	@Path("/Triggers")
+	@Path("/triggers")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Trigger> getAllTriggers(@Context HttpHeaders header, @Context HttpServletResponse response) {
 		response.addHeader("Access-Control-Allow-Origin", "*");
@@ -36,7 +36,7 @@ public class TriggerService {
 	}
 
 	@POST
-	@Path("/Triggers")
+	@Path("/triggers")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Response addUser(Trigger trigger){
 		System.out.println("Got request to add Trigger: "+gson.toJson(trigger));
