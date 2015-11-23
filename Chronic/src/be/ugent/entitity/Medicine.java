@@ -1,7 +1,7 @@
 package be.ugent.entitity;
 
 import java.io.Serializable;
-
+import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "patient")
@@ -14,7 +14,7 @@ public class Medicine implements Serializable {
 	private int patientID;
 	private int drugID;
 	
-	private String Date;
+	private Date Date;
 	private float quantity;
 	
 		
@@ -53,12 +53,12 @@ public class Medicine implements Serializable {
 	}
 
 
-	public String getDate() {
+	public Date getDate() {
 		return Date;
 	}
 
 
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		Date = date;
 	}
 

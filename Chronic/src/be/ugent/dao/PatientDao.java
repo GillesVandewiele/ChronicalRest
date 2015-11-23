@@ -30,17 +30,7 @@ public class PatientDao {
 		if(object != null){
 			Gson gson = new Gson();
 			patient = gson.fromJson(object.toString(), Patient.class);
-//			
-//			patient.setBirthDate(""+object.get("birthDate"));
-//			patient.setEmployed((boolean)object.get("isEmployed"));
-//			patient.setFirstName(firstName);
-//			patient.setLastName(lastName);
-//			patient.setPatientID((int)Double.parseDouble(""+object.get("patientID")));
-//			patient.setMale((boolean)object.get("isMale"));
-//			patient.setEmail(""+object.get("email"));
-//			patient.setAdvice(""+object.get("advice"));
-//			patient.setDiagnosis(""+object.get("diagnosis"));
-//			patient.setPassword(""+object.get("password"));
+
 			return patient;
 		}else{
 			return null;
@@ -55,19 +45,7 @@ public class PatientDao {
 		DBObject object= coll.findOne(whereQuery);
 		if(object != null){
 			Gson gson = new Gson();
-			patient = gson.fromJson(object.toString(), Patient.class);
-////			
-//			patient.setBirthDate(""+object.get("birthDate"));
-//			patient.setEmployed((boolean)object.get("isEmployed"));
-//			patient.setFirstName(""+object.get("firstName"));
-//			patient.setLastName(""+object.get("lastName"));
-//			patient.setPatientID((int)Double.parseDouble(""+object.get("patientID")));
-//			patient.setMale((boolean)object.get("isMale"));
-//			patient.setEmail(email);
-//			patient.setAdvice(""+object.get("advice"));
-//			patient.setDiagnosis(""+object.get("diagnosis"));
-//			patient.setPassword(""+object.get("password"));
-			
+			patient = gson.fromJson(object.toString(), Patient.class);			
 			return patient;
 		}else{
 			return null;

@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 
 import be.ugent.dao.MedicineDao;
 import be.ugent.entitity.Medicine;
+import be.ugent.entitity.Medicine;
 import be.ugent.entitity.Patient;
 
 @Path("/MedicineService")
@@ -25,41 +26,47 @@ public class MedicineService {
 	Gson genson = new Gson();
 
 	
-//	@GET
-//	@Path("/medicines")
-//	@Produces({ MediaType.APPLICATION_JSON })
-//	public List<Medicine> getAllMedicines(@Context HttpHeaders header, @Context HttpServletResponse response, int patientID) {
-//					
-//		response.addHeader("Access-Control-Allow-Origin", "*");
-//		return medicineDao.getAllMedicinesForPatient();
-//
-//	}
-
-//	@POST
-//	@Path("/Medicines")
-//	@Consumes({MediaType.APPLICATION_JSON})
-//	public Response addUser(Medicine Medicine){
-//		System.out.println("Got request to add user: "+genson.toJson(Medicine));
-//		
-//		Medicine toAdd = new Medicine();
-//		
-//		toAdd.setDescription(Medicine.getDescription());
-//		toAdd.setName(Medicine.getName());
-//		toAdd.setMedicineID(medicineDao.getNewMedicineID());
-//		
-//		
-//		System.out.println("Created User: "+genson.toJson(toAdd));
-//		if(medicineDao.addMedicine(toAdd)){
-//			//return Medicine successfully created
-//			return Response.status(201).build();
-//		}else{
-//			//return record was already in database, or was wrong format
-//			return Response.status(409).build();
-//		}
-//		
-//		
-//		
-//	}
+	@POST
+	@Path("/medicines/update")
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Response changeMedicine(Medicine medicine) {
+//		if(!Authentication.isAuthorized(header)){
+//			return Response.status(403).build();
+//		}		
+		
+		Medicine toAdd = medicine;
+		
+		if(toAdd == null){
+			return Response.status(422).build();
+		}
+		System.out.println("Got request to add medicine: "+genson.toJson(medicine));
+		//if it's a medicine that is not yet submitted to the database
+		if(medicine.getMedicineID()==-1){
+			int id = medicineDao.getNewMedicineID();
+			medicine.setMedicineID(id);
+			if(medicineDao.addMedicine(medicine)){
+				return Response.status(201).entity(medicineDao.getMedicine(toAdd.getMedicineID(),toAdd.getPatientID())).build();
+			}else{
+				//medicine given is already in database, but with wrong medicineID
+				return Response.status(409).build();
+			}
+		}
+		if(medicineDao.getMedicineID(medicine)<0){
+			return Response.status(404).build();
+		}
+		toAdd.setMedicineID(medicineDao.getMedicineID(medicine));
+		
+		
+		System.out.println("Created medicine: "+genson.toJson(toAdd));
+		
+		if(medicineDao.changeMedicine(toAdd)){
+			//return medicine successfully created
+			return Response.status(202).entity(medicineDao.getMedicine(toAdd.getMedicineID(),toAdd.getPatientID())).build();
+		}else{
+			//return record was already in database, or was wrong format
+			return Response.status(409).build();
+		}
+	}
 
 	
 }

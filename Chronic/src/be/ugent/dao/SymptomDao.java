@@ -3,6 +3,7 @@ package be.ugent.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -18,7 +19,8 @@ import be.ugent.entitity.Symptom;
 public class SymptomDao {
 	private MongoDBSingleton dbSingleton = MongoDBSingleton.getInstance();
 	private DB db = dbSingleton.getTestdb();
-
+	private Gson gson = new Gson();
+	
 	public List<Symptom> getAllSymptoms(){
 		DBCollection coll = db.getCollection("symptom");
 		DBCursor cursor = coll.find();
@@ -69,5 +71,53 @@ public class SymptomDao {
 			}
 		}
 		return max+1;
+	}
+
+	public int getSymptomID(Symptom symptom) {
+		DBCollection coll = db.getCollection("symptom");
+		BasicDBObject whereQuery = new BasicDBObject();
+		whereQuery.put("name",symptom.getName());
+		DBCursor cursor = coll.find(whereQuery);
+		int id = -1;
+		while(cursor.hasNext()){
+			BasicDBObject next = (BasicDBObject) cursor.next();
+			id = (int)Double.parseDouble(""+next.get("symptomID"));
+		}
+		return id;
+	}
+
+	public boolean changeSymptom(Symptom symptom) {
+
+		DBCollection collection = db.getCollection("symptom");
+		// convert JSON to DBObject directly
+		BasicDBObject bdbo = new BasicDBObject();
+		bdbo.put("symptomID", symptom.getSymptomID());
+		DBCursor curs = collection.find(bdbo);
+		if(curs.count()>1)
+			return false;
+		Gson genson = new Gson();
+		DBObject dbObject = (DBObject) JSON.parse(genson.toJson(symptom));
+		collection.update(bdbo,dbObject);
+
+		DBCursor cursorDoc = collection.find();
+		while (cursorDoc.hasNext()) {
+			System.out.println(cursorDoc.next());
+		}
+
+		System.out.println("Done");
+		return true;
+	}
+
+	public Symptom getSymptom(String name) {
+		DBCollection coll = db.getCollection("symptom");
+		BasicDBObject whereQuery = new BasicDBObject();
+		whereQuery.put("name", name);
+		DBCursor cursor = coll.find(whereQuery);
+		Symptom symptom = null;
+		while (cursor.hasNext()) {
+			DBObject o = cursor.next();
+			symptom = gson.fromJson(o.toString(), Symptom.class);
+		}
+		return symptom;
 	}
 }

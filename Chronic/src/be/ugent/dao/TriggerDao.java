@@ -3,6 +3,7 @@ package be.ugent.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -12,11 +13,13 @@ import com.mongodb.util.JSON;
 import com.owlike.genson.Genson;
 
 import be.ugent.MongoDBSingleton;
+import be.ugent.entitity.Drug;
 import be.ugent.entitity.Trigger;
 
 public class TriggerDao {
 	private MongoDBSingleton dbSingleton = MongoDBSingleton.getInstance();
 	private DB db = dbSingleton.getTestdb();
+	private Gson gson = new Gson();
 
 	public List<Trigger> getAllTriggers(){
 		DBCollection coll = db.getCollection("trigger");
@@ -24,10 +27,8 @@ public class TriggerDao {
 		List<Trigger> list = new ArrayList<Trigger>();
 		while (cursor.hasNext()) {
 			DBObject o = cursor.next();
-			Trigger drug = new Trigger();
-			drug.setDescription(o.get("description")+"");
-			drug.setName(o.get("name")+"");
-			drug.setTriggerID(((int)o.get("triggerID")));
+			Trigger drug = gson.fromJson(o.toString(), Trigger.class);
+			
 			list.add(drug);
 		}
 		return list;
@@ -68,5 +69,53 @@ public class TriggerDao {
 			}
 		}
 		return max+1;
+	}
+
+	public int getTriggerID(Trigger trigger) {
+		DBCollection coll = db.getCollection("trigger");
+		BasicDBObject whereQuery = new BasicDBObject();
+		whereQuery.put("name",trigger.getName());
+		DBCursor cursor = coll.find(whereQuery);
+		int id = -1;
+		while(cursor.hasNext()){
+			BasicDBObject next = (BasicDBObject) cursor.next();
+			id = (int)Double.parseDouble(""+next.get("triggerID"));
+		}
+		return id;
+	}
+
+	public boolean changeTrigger(Trigger trigger) {
+
+		DBCollection collection = db.getCollection("trigger");
+		// convert JSON to DBObject directly
+		BasicDBObject bdbo = new BasicDBObject();
+		bdbo.put("triggerID", trigger.getTriggerID());
+		DBCursor curs = collection.find(bdbo);
+		if(curs.count()>1)
+			return false;
+		Gson genson = new Gson();
+		DBObject dbObject = (DBObject) JSON.parse(genson.toJson(trigger));
+		collection.update(bdbo,dbObject);
+
+		DBCursor cursorDoc = collection.find();
+		while (cursorDoc.hasNext()) {
+			System.out.println(cursorDoc.next());
+		}
+
+		System.out.println("Done");
+		return true;
+	}
+
+	public Trigger getTrigger(String name) {
+		DBCollection coll = db.getCollection("trigger");
+		BasicDBObject whereQuery = new BasicDBObject();
+		whereQuery.put("name", name);
+		DBCursor cursor = coll.find(whereQuery);
+		Trigger trigger = null;
+		while (cursor.hasNext()) {
+			DBObject o = cursor.next();
+			trigger = gson.fromJson(o.toString(), Trigger.class);
+		}
+		return trigger;
 	}
 }

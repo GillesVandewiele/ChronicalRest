@@ -18,6 +18,7 @@ import be.ugent.entitity.Drug;
 public class DrugDao {
 	private MongoDBSingleton dbSingleton = MongoDBSingleton.getInstance();
 	private DB db = dbSingleton.getTestdb();
+	private Gson gson = new Gson();
 
 	public List<Drug> getAllDrugs(){
 		DBCollection coll = db.getCollection("drug");
@@ -69,5 +70,53 @@ public class DrugDao {
 			}
 		}
 		return max+1;
+	}
+
+	public int getDrugID(Drug drug) {
+		DBCollection coll = db.getCollection("drug");
+		BasicDBObject whereQuery = new BasicDBObject();
+		whereQuery.put("name",drug.getName());
+		DBCursor cursor = coll.find(whereQuery);
+		int id = -1;
+		while(cursor.hasNext()){
+			BasicDBObject next = (BasicDBObject) cursor.next();
+			id = (int)Double.parseDouble(""+next.get("drugID"));
+		}
+		return id;
+	}
+
+	public boolean changeDrug(Drug drug) {
+
+		DBCollection collection = db.getCollection("drug");
+		// convert JSON to DBObject directly
+		BasicDBObject bdbo = new BasicDBObject();
+		bdbo.put("drugID", drug.getDrugID());
+		DBCursor curs = collection.find(bdbo);
+		if(curs.count()>1)
+			return false;
+		Gson genson = new Gson();
+		DBObject dbObject = (DBObject) JSON.parse(genson.toJson(drug));
+		collection.update(bdbo,dbObject);
+
+		DBCursor cursorDoc = collection.find();
+		while (cursorDoc.hasNext()) {
+			System.out.println(cursorDoc.next());
+		}
+
+		System.out.println("Done");
+		return true;
+	}
+
+	public Drug getDrug(String name) {
+		DBCollection coll = db.getCollection("drug");
+		BasicDBObject whereQuery = new BasicDBObject();
+		whereQuery.put("name", name);
+		DBCursor cursor = coll.find(whereQuery);
+		Drug drug = null;
+		while (cursor.hasNext()) {
+			DBObject o = cursor.next();
+			drug = gson.fromJson(o.toString(), Drug.class);
+		}
+		return drug;
 	}
 }
