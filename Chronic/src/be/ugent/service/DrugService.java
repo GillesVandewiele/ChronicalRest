@@ -1,9 +1,11 @@
 package be.ugent.service;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -28,7 +30,7 @@ public class DrugService {
 	}
 	
 
-	@POST
+	@PUT
 	@Path("/drugs")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Response addDrug(Drug drug, @HeaderParam("Authorization") String header) {
@@ -59,7 +61,7 @@ public class DrugService {
 		}
 	}
 
-	@POST
+	@DELETE
 	@Path("/drugs/update")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Response changeDrug(Drug drug, @HeaderParam("Authorization") String header){

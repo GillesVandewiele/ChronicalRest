@@ -1,6 +1,7 @@
 package be.ugent.service;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -56,7 +57,7 @@ public class MedicineService {
 		}
 	}
 	
-	@POST
+	@DELETE
 	@Path("/medicines/delete")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Response deleteMedicine(Medicine medicine, @HeaderParam("Authorization") String header){
