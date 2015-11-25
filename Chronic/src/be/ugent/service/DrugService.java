@@ -72,7 +72,7 @@ public class DrugService {
 		if(toAdd == null){
 			return Response.status(422).build();
 		}
-		System.out.println("Got request to add drug: "+gson.toJson(drug));
+		System.out.println("Got request to update drug: "+gson.toJson(drug));
 		//if it's a drug that is not yet submitted to the database
 		if(drug.getDrugID()==-1){
 			int id = drugDao.getNewDrugID();
@@ -84,12 +84,7 @@ public class DrugService {
 				return Response.status(409).build();
 			}
 		}
-		if(drugDao.getDrugID(drug)<0){
-			return Response.status(404).build();
-		}
-		toAdd.setDrugID(drugDao.getDrugID(drug));
-		
-		
+				
 		System.out.println("Created drug: "+gson.toJson(toAdd));
 		
 		if(drugDao.changeDrug(toAdd)){

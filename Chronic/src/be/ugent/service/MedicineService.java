@@ -44,13 +44,8 @@ public class MedicineService {
 				return Response.status(409).build();
 			}
 		}
-		if(medicineDao.getMedicineID(medicine)<0){
-			return Response.status(404).build();
-		}
-		toAdd.setMedicineID(medicineDao.getMedicineID(medicine));
 		
-		
-		System.out.println("Created medicine: "+gson.toJson(toAdd));
+		System.out.println("Changing medicine: "+gson.toJson(toAdd));
 		
 		if(medicineDao.changeMedicine(toAdd)){
 			//return medicine successfully created

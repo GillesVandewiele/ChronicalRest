@@ -80,13 +80,9 @@ public class SymptomService {
 				return Response.status(409).build();
 			}
 		}
-		if(symptomDao.getSymptomID(symptom)<0){
-			return Response.status(404).build();
-		}
-		toAdd.setSymptomID(symptomDao.getSymptomID(symptom));
+				
 		
-		
-		System.out.println("Created symptom: "+genson.toJson(toAdd));
+		System.out.println("Changing symptom: "+genson.toJson(toAdd));
 		
 		if(symptomDao.changeSymptom(toAdd)){
 			//return symptom successfully created

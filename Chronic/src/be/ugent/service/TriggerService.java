@@ -85,13 +85,8 @@ public class TriggerService {
 				return Response.status(409).build();
 			}
 		}
-		if(triggerDao.getTriggerID(trigger)<0){
-			return Response.status(404).build();
-		}
-		toAdd.setTriggerID(triggerDao.getTriggerID(trigger));
-		
-		
-		System.out.println("Created trigger: "+gson.toJson(toAdd));
+				
+		System.out.println("Changing trigger: "+gson.toJson(toAdd));
 		
 		if(triggerDao.changeTrigger(toAdd)){
 			//return trigger successfully created
