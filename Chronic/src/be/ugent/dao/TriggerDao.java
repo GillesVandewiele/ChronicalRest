@@ -13,7 +13,6 @@ import com.mongodb.util.JSON;
 import com.owlike.genson.Genson;
 
 import be.ugent.MongoDBSingleton;
-import be.ugent.entitity.Drug;
 import be.ugent.entitity.Trigger;
 
 public class TriggerDao {
@@ -118,4 +117,23 @@ public class TriggerDao {
 		}
 		return trigger;
 	}
+	
+	public boolean deleteTrigger(Trigger trigger) {
+		DBCollection collection = db.getCollection("trigger");
+		// convert JSON to DBObject directly
+		BasicDBObject bdbo = new BasicDBObject();
+		bdbo.put("triggerID", trigger.getTriggerID());
+		DBCursor curs = collection.find(bdbo);
+		if(curs.count()>1){
+			System.err.println("Multiple triggers in the database have the same id");
+			return false;
+		}
+		
+		BasicDBObject document = new BasicDBObject();
+		document.put("triggerID", trigger.getTriggerID());
+		collection.remove(document);
+		System.out.println("Done");
+		return true;
+	}
+	
 }

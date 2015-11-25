@@ -8,6 +8,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -17,11 +24,12 @@ import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 import com.owlike.genson.Genson;
 
+import be.ugent.Authentication;
 import be.ugent.MongoDBSingleton;
 import be.ugent.entitity.Drug;
 import be.ugent.entitity.Medicine;
 import be.ugent.entitity.Patient;
-import be.ugent.entitity.Medicine;
+import be.ugent.entitity.Trigger;
 
 public class MedicineDao {
 	private MongoDBSingleton dbSingleton = MongoDBSingleton.getInstance();
@@ -80,6 +88,7 @@ public class MedicineDao {
 
 	private Gson gson = new Gson();
 
+	//probably unnecessary
 	public List<Medicine> getAllMedicines(){
 		DBCollection coll = db.getCollection("medicine");
 		DBCursor cursor = coll.find();
@@ -93,8 +102,6 @@ public class MedicineDao {
 	}
 	
 	public boolean addMedicine(Medicine medicine){
-		
-		
 		DBCollection collection = db.getCollection("medicine");
 		// convert JSON to DBObject directly
 		BasicDBObject bdbo = new BasicDBObject();
@@ -180,4 +187,23 @@ public class MedicineDao {
 		}
 		return medicine;
 	}
+	
+	public boolean deleteMedicine(Medicine medicine) {
+		DBCollection collection = db.getCollection("medicine");
+		// convert JSON to DBObject directly
+		BasicDBObject bdbo = new BasicDBObject();
+		bdbo.put("medicineID", medicine.getMedicineID());
+		DBCursor curs = collection.find(bdbo);
+		if(curs.count()>1){
+			System.err.println("Multiple medicines in the database have the same id");
+			return false;
+		}
+		
+		BasicDBObject document = new BasicDBObject();
+		document.put("medicineID", medicine.getMedicineID());
+		collection.remove(document);
+		System.out.println("Done");
+		return true;
+	}
+	
 }

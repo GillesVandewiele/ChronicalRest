@@ -120,4 +120,22 @@ public class SymptomDao {
 		}
 		return symptom;
 	}
+
+	public boolean deleteSymptom(Symptom symptom) {
+		DBCollection collection = db.getCollection("symptom");
+		// convert JSON to DBObject directly
+		BasicDBObject bdbo = new BasicDBObject();
+		bdbo.put("symptomID", symptom.getSymptomID());
+		DBCursor curs = collection.find(bdbo);
+		if(curs.count()>1){
+			System.err.println("Multiple symptoms in the database have the same id");
+			return false;
+		}
+		
+		BasicDBObject document = new BasicDBObject();
+		document.put("symptomID", symptom.getSymptomID());
+		collection.remove(document);
+		System.out.println("Done");
+		return true;
+	}
 }

@@ -35,9 +35,7 @@ public class SymptomService {
 	public Response addSymptom(Symptom symptom, @HeaderParam("Authorization") String header) {
 		if(!Authentication.isAuthorized(header)){
 			return Response.status(403).build();
-		}		
-		
-		
+		}	
 		Symptom toAdd = symptom;
 		
 		if(toAdd == null){
@@ -66,10 +64,7 @@ public class SymptomService {
 //		if(!Authentication.isAuthorized(header)){
 //			return Response.status(403).build();
 //		}		
-		
-		
 		Symptom toAdd = symptom;
-		
 		if(toAdd == null){
 			return Response.status(422).build();
 		}
@@ -99,6 +94,36 @@ public class SymptomService {
 		}else{
 			//return record was already in database, or was wrong format
 			return Response.status(409).build();
+		}
+	}
+	
+	@POST
+	@Path("/symptoms/delete")
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Response deleteSymptom(Symptom symptom, @HeaderParam("Authorization") String header){
+		if(!Authentication.isAuthorized(header)){
+			return Response.status(403).build();
+		}				
+		
+		Symptom toAdd = symptom;
+		
+		if(toAdd == null){
+			return Response.status(422).build();
+		}
+		System.out.println("Got request to delete symptom: "+genson.toJson(symptom));
+		//if it's a symptom that is not yet submitted to the database
+		if(symptom.getSymptomID()<0){
+			//symptom given is already in database, but with wrong symptomID
+			return Response.status(404).build();
+			
+		}
+		
+		if(symptomDao.deleteSymptom(toAdd)){
+			//return symptom successfully deleted
+			return Response.status(200).entity(symptomDao.getSymptom(toAdd.getName())).build();
+		}else{
+			//return record was already in database, or was wrong format
+			return Response.status(404).build();
 		}
 	}
 	

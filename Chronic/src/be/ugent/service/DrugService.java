@@ -18,7 +18,7 @@ import be.ugent.entitity.Drug;
 @Path("/DrugService")
 public class DrugService {
 	DrugDao drugDao = new DrugDao();
-	Gson genson = new Gson();
+	Gson gson = new Gson();
 	
 	@GET
 	@Path("/drugs")
@@ -42,13 +42,13 @@ public class DrugService {
 			return Response.status(422).build();
 		}
 		
-		System.out.println("Got request to add drug: "+genson.toJson(drug));
+		System.out.println("Got request to add drug: "+gson.toJson(drug));
 		
 		
 		toAdd.setDrugID(drugDao.getNewDrugID());
 		
 		
-		System.out.println("Created drug: "+genson.toJson(toAdd));
+		System.out.println("Created drug: "+gson.toJson(toAdd));
 		
 		if(drugDao.addDrug(toAdd)){
 			//return drug successfully created
@@ -62,18 +62,17 @@ public class DrugService {
 	@POST
 	@Path("/drugs/update")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Response changeDrug(Drug drug, @HeaderParam("Authorization") String header) {
+	public Response changeDrug(Drug drug, @HeaderParam("Authorization") String header){
 		if(!Authentication.isAuthorized(header)){
 			return Response.status(403).build();
-		}		
-		
+		}				
 		
 		Drug toAdd = drug;
 		
 		if(toAdd == null){
 			return Response.status(422).build();
 		}
-		System.out.println("Got request to add drug: "+genson.toJson(drug));
+		System.out.println("Got request to add drug: "+gson.toJson(drug));
 		//if it's a drug that is not yet submitted to the database
 		if(drug.getDrugID()==-1){
 			int id = drugDao.getNewDrugID();
@@ -91,7 +90,7 @@ public class DrugService {
 		toAdd.setDrugID(drugDao.getDrugID(drug));
 		
 		
-		System.out.println("Created drug: "+genson.toJson(toAdd));
+		System.out.println("Created drug: "+gson.toJson(toAdd));
 		
 		if(drugDao.changeDrug(toAdd)){
 			//return drug successfully created
@@ -101,5 +100,37 @@ public class DrugService {
 			return Response.status(409).build();
 		}
 	}
+	
+	@POST
+	@Path("/drugs/delete")
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Response deleteDrug(Drug drug, @HeaderParam("Authorization") String header){
+		if(!Authentication.isAuthorized(header)){
+			return Response.status(403).build();
+		}				
+		
+		Drug toAdd = drug;
+		
+		if(toAdd == null){
+			return Response.status(422).build();
+		}
+		System.out.println("Got request to delete drug: "+gson.toJson(drug));
+		//if it's a drug that is not yet submitted to the database
+		if(drug.getDrugID()<0){
+			//drug given is already in database, but with wrong drugID
+			return Response.status(404).build();
+			
+		}
+		
+		if(drugDao.deleteDrug(toAdd)){
+			//return drug successfully deleted
+			return Response.status(200).build();
+		}else{
+			//return record was already in database, or was wrong format
+			return Response.status(404).build();
+		}
+	}
+	
+	
 	
 }

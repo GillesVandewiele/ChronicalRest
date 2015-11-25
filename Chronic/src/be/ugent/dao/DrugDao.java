@@ -119,4 +119,22 @@ public class DrugDao {
 		}
 		return drug;
 	}
+
+	public boolean deleteDrug(Drug drug) {
+		DBCollection collection = db.getCollection("drug");
+		// convert JSON to DBObject directly
+		BasicDBObject bdbo = new BasicDBObject();
+		bdbo.put("drugID", drug.getDrugID());
+		DBCursor curs = collection.find(bdbo);
+		if(curs.count()>1){
+			System.err.println("Multiple drugs in the database have the same id");
+			return false;
+		}
+		
+		BasicDBObject document = new BasicDBObject();
+		document.put("drugID", drug.getDrugID());
+		collection.remove(document);
+		System.out.println("Done");
+		return true;
+	}
 }
