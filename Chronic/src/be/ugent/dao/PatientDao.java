@@ -139,4 +139,19 @@ public class PatientDao {
 		}else
 			return null;
 	}
+
+	public Patient getPatienFromId(String patientID) {
+		Patient patient = new Patient();
+		DBCollection coll = db.getCollection("patient");
+		BasicDBObject whereQuery = new BasicDBObject();
+		whereQuery.put("patientID", patientID);
+		DBObject object= coll.findOne(whereQuery);
+		if(object != null){
+			Gson gson = new Gson();
+			patient = gson.fromJson(object.toString(), Patient.class);			
+			return patient;
+		}else{
+			return null;
+		}
+	}
 }
