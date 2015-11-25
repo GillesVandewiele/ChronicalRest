@@ -53,6 +53,19 @@ public class PatientService {
 		return Response.accepted(retrieved+"").build();
 
 	}
+	
+	@POST
+	@Path("/patients/hello")
+	@Consumes({MediaType.TEXT_PLAIN})
+	public Response hello(String user){
+		
+		System.out.println("Hello "+user);
+		return Response.accepted("Hello "+user).build();
+		
+	}
+
+	
+
 
 	@POST
 	@Path("/patients")
