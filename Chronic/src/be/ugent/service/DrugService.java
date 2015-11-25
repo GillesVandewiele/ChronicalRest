@@ -61,7 +61,7 @@ public class DrugService {
 		}
 	}
 
-	@DELETE
+	@POST
 	@Path("/drugs/update")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Response changeDrug(Drug drug, @HeaderParam("Authorization") String header){
@@ -98,7 +98,7 @@ public class DrugService {
 		}
 	}
 	
-	@POST
+	@DELETE
 	@Path("/drugs/delete")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Response deleteDrug(Drug drug, @HeaderParam("Authorization") String header){
