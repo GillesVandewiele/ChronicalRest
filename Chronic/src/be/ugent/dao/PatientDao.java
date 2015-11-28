@@ -84,6 +84,12 @@ public class PatientDao {
 			return true;
 		}
 		else{
+			patient.setPatientID(getNewId());
+			if(isValidUser(patient)){
+				db.getCollection("patient").insert((BasicDBObject)JSON.parse(patient.toString()));
+//				
+				return true;
+			}
 			System.out.println("Error storing patient : Not a valid Patient object to store");
 			System.err.println("Error storing patient : Not a valid Patient object to store");
 			return false;
@@ -97,7 +103,7 @@ public class PatientDao {
 		if(patient == null){
 			System.err.println("Patient == null to chec if isValidUser");
 			return false;
-		}else if(patient.getPatientID()>=1){
+		}else if(patient.getPatientID()>=0){
 			whereQuery.put("patientID", patient.getPatientID());
 			DBCursor cursor = coll.find(whereQuery);
 			if(cursor.count()>=1){
@@ -144,7 +150,7 @@ public class PatientDao {
 		Patient patient = new Patient();
 		DBCollection coll = db.getCollection("patient");
 		BasicDBObject whereQuery = new BasicDBObject();
-		whereQuery.put("patientID", patientID);
+		whereQuery.put("patientID", Integer.parseInt(patientID));
 		DBObject object= coll.findOne(whereQuery);
 		if(object != null){
 			Gson gson = new Gson();
@@ -154,4 +160,5 @@ public class PatientDao {
 			return null;
 		}
 	}
+
 }

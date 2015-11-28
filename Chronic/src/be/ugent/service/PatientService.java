@@ -41,6 +41,20 @@ public class PatientService {
 	}
 	
 	@GET
+	@Path("/advice")
+	@Produces({ MediaType.TEXT_PLAIN })
+	public Response getAdvice(@QueryParam("patientID") String patientID, @HeaderParam("Authorization") String header) {
+		if(!Authentication.isAuthorized(header)){
+			return Response.status(403).build();
+		}
+//		System.out.println("Patient opgevraagd met naam: " + firstName + " " + lastName);
+		Patient retrieved = patientDao.getPatienFromId(patientID);
+		
+		return Response.ok().entity(retrieved.getAdvice()+"").build();
+
+	}
+	
+	@GET
 	@Path("/login")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response login(@HeaderParam("Authorization") String header) {
@@ -70,7 +84,7 @@ public class PatientService {
 	@POST
 	@Path("/patients")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Response addUser(String user){
+	public Response addUser(Patient user){
 		
 //		System.out.println("pat: "+user);
 //		System.out.println("Patient requested to add: "+user.toString());

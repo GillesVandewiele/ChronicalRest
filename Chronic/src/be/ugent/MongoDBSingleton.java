@@ -1,6 +1,7 @@
 package be.ugent;
 
 import java.net.UnknownHostException;
+import java.util.List;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
@@ -41,5 +42,31 @@ public class MongoDBSingleton {
 //   boolean auth = db.authenticate(dbUser, dbPassword.toCharArray());
 //  }
   return db;
+ }
+ 
+ public boolean isOnline(String targetDB){
+	 if(getTestdb()!=null){
+		 try{
+			 List<String> databaseNames = mongoClient.getDatabaseNames();
+			 if(databaseNames.contains(targetDB)){
+				 return true;
+			 }
+			 return false;
+		 }catch(Exception e){
+			 return false;
+		 }
+	 }
+	 else{
+		 try{
+		 getInstance();
+		 List<String> databaseNames = mongoClient.getDatabaseNames();
+		 if(databaseNames.contains(targetDB)){
+			 return true;
+		 }
+		 return false;}
+		 catch(Exception e){
+			 return false;
+		 }
+	 }
  }
 }
