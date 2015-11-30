@@ -79,6 +79,11 @@ public class PatientDao {
 		}
 		return max + 1;
 	}
+	
+	public String getSemantics(String identity){
+		return  "@prefix ex: "+"<http://example.org/>.\n" +
+				identity + " a ex:Location.\n";
+	}
 
 	public boolean storePatient(Patient patient) {
 		if (isValidUser(patient)) {

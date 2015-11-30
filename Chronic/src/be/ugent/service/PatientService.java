@@ -80,8 +80,18 @@ public class PatientService {
 		
 	}
 
-	
-
+	@GET
+	@Path("/patients/semantics")
+	@Produces({ MediaType.TEXT_PLAIN })
+	public Response getHeadacheSemantics(@HeaderParam("Authorization") String header, @QueryParam("patientID") String patientID) {
+		if(patientID == null)
+			return Response.ok(patientDao.getSemantics("<http://localhost:8080/Chronic/rest/HeadacheService/headaches>")).build();
+			
+		if(patientDao.getPatienFromId(patientID) != null)
+			return Response.ok(patientDao.getSemantics("<http://localhost:8080/Chronic/rest/PatientService/patient?patientID="+patientID+">")).build();
+		else
+			return Response.status(404).build();
+	}
 
 	@POST
 	@Path("/patients")
