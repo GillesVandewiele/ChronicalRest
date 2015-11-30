@@ -40,10 +40,9 @@ public class VisualizationService {
 		// TODO: better catch blocks and return states
 
 		String context = "\"@context\": {" + "\"name\": \"http://example.org/name\","
-				+ "\"semanticName\": \"http://example.org/semanticName\"," + "\"url\": \"http://example.org/url\""
+				+ "\"semanticName\": {\"@id\": \"http://example.org/semanticName\",\"@type\": \"@id\"}," + "\"url\": \"http://example.org/url\""
 				+ "}";
 
-		// \"description\": \"Test\"
 		String values = "\"name\":" + "\"Hoofdpijn Intensiteiten\" ,"
 				+ "\"semanticName\": \"http://example.org/HeadacheIntensitySensor\"," + "\"url\": \""
 				+ "headache_intensities\"";
