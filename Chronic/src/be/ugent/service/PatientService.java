@@ -40,6 +40,8 @@ public class PatientService {
 
 	}
 	
+	
+	
 	@GET
 	@Path("/advice")
 	@Produces({ MediaType.TEXT_PLAIN })
