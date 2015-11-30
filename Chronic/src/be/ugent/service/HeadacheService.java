@@ -26,13 +26,19 @@ public class HeadacheService {
 	PatientDao patientDao = new PatientDao();
 	Gson gson = new Gson();
 	
-	@POST
+	@GET
 	@Path("/headaches")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@Consumes({MediaType.APPLICATION_JSON})
 	public Response getAllHeadaches( @QueryParam("patientID") String patientID) {
 		
 		return Response.ok(headacheDao.getAllHeadachesForPatient(Integer.parseInt(patientID))).build();
+	}
+	
+	@GET
+	@Path("/headaches/semantics")
+	@Produces({ MediaType.TEXT_PLAIN })
+	public Response getHeadacheSemantics(@HeaderParam("Authorization") String header, @QueryParam("patientID") String patientID) {
+		return Response.ok(headacheDao.getSemantics("<http://localhost:8080/Chronic/rest/HeadacheService/headaches?patientID="+patientID+">")).build();
 	}
 	
 

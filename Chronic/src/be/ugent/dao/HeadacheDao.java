@@ -35,6 +35,12 @@ public class HeadacheDao {
 		return list;
 	}
 	
+	public String getSemantics(String identity){
+		return  "@prefix ex: "+"<http://example.org/>.\n" +
+				"@prefix http: "+"<http://www.w3.org/2011/http#>.\n" +
+				identity + " a ex:RealTemperatureSensor.\n";
+	}
+	
 	public boolean addHeadacheForPatient(Patient patient, Headache headache){
 		DBCollection collection = db.getCollection("headache");
 		// convert JSON to DBObject directly
