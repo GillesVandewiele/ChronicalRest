@@ -106,13 +106,7 @@ public class VisualizationService {
 
 			// return Response.ok(JsonUtils.toPrettyString(compact)).build();
 
-			try {
-				return Response.ok(JsonUtils.toPrettyString(o)).build();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return Response.status(400).build();
+			return Response.ok(o).build();
 		}
 
 		Integer[] patientIDs = patientDao.getAllPatients();
