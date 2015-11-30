@@ -32,7 +32,8 @@ import be.ugent.entitity.Patient;
 
 @Path("/VisualizationService")
 public class VisualizationService {
-
+	
+	private Gson gson = new Gson();
 	@GET
 	@Path("/sensors")
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -142,17 +143,26 @@ public class VisualizationService {
 			values = "{\"test\":\"test\", \"@id\":"
 					+ "\"http://localhost:8080/Chronic/rest/VisualizationService/sensors/headache_intensities?patientID="
 					+ integer + "\"," + "\"description\":" + "\"Hoofdpijn Intensiteiten\" ," + "\"discrete\": \"true\","
-					+ "\"location\": \"" + "null\"," + "\"semantics\": \""+"http://localhost:8080/Chronic/rest/VisualizationService/sensors/semantics/headache_intensities?patientID="+integer+"\"," + "\"unit\": \"\"," + "\"value\": \""
+					+ "\"location\": \"" + "null\"," + "\"semantics\": \""+
+					"http://localhost:8080/Chronic/rest/VisualizationService/sensors/semantics/headache_intensities?patientID="+integer+
+					"\"," + "\"unit\": \"\"," + "\"value\": \""
 					+ (0 + rand.nextInt(11)) + "" + "\"}";
 			output += "," + values + "}";
 			Object o;
 			try {
+				
 				o = JsonLdProcessor.expand(JSON.parse(output));
-				// System.out.println("\n=========================="+o.toString().substring(1,
-				// o.toString().length()-1));
-				objectLijst += o.toString().substring(1, o.toString().length() - 1) + ",";
+				System.out.println(o);
+//				System.out.println("\n=========================="+o.toString().substring(1,o.toString().length()-1));
+				objectLijst += JsonUtils.toPrettyString(o).substring(1, JsonUtils.toPrettyString(o).length() - 1) + ",";
 				output = "{" + context;
 			} catch (JsonLdError e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JsonGenerationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
