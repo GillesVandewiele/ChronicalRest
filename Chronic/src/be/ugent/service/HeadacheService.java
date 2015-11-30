@@ -80,9 +80,9 @@ public class HeadacheService {
 		Headache toAdd = new Headache();
 		try {
 			toAdd.setEnd(""+headacheJSON.get("end"));
-			toAdd.setLocations(null);
-			toAdd.setSymptomIDs(null);
-			toAdd.setTriggerIDs(null);
+//			toAdd.setLocations((JSONArray)headacheJSON.getJSONArray("location"));
+			toAdd.setSymptomIDs((JSONArray)headacheJSON.getJSONArray("symptoms"));
+			toAdd.setTriggerIDs((JSONArray)headacheJSON.getJSONArray("triggers"));
 			ArrayList<Pair> values = new ArrayList<>();
 			JSONArray array = headacheJSON.getJSONArray("intensityValues");
 	        for(int i = 0; i < array.length(); i++){
@@ -100,13 +100,13 @@ public class HeadacheService {
 		}
 	
 		System.out.println("JSON?"+headache);
-		System.out.println("Got request to add headache: "+toAdd.toJSON());
+		System.out.println("Got request to add headache: "+toAdd);
 		
 		
 		toAdd.setHeadacheID(headacheDao.getNewHeadacheID());
 		
 		
-		System.out.println("Created headache: "+toAdd.toJSON());
+		System.out.println("Created headache: "+JSON.parse(toAdd.toJSON().toString()));
 		
 		//TODO return object with correct ID (now id will not be updated in the return object
 		Patient patient = patientDao.getPatienFromId(patientID);

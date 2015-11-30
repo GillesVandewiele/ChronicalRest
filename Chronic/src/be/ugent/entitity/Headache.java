@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -36,9 +37,9 @@ public class Headache implements Serializable {
 	
 	private String end;
 	
-	private Set<Location> locations;
-	private Set<Integer> symptomIDs;
-	private Set<Integer> triggerIDs;
+	private Set<Location> locations = new HashSet<Location>();
+	private Set<Integer> symptomIDs = new HashSet<Integer>();
+	private Set<Integer> triggerIDs = new HashSet<Integer>();
 	
 		
 	public Headache() {
@@ -257,6 +258,53 @@ public class Headache implements Serializable {
 			e.printStackTrace();
 		}		
 		return result;
+	}
+
+
+	public void setLocations(JSONArray jsonObject) {
+		for(int i = 0; i < jsonObject.length(); i++){
+            try {
+				String key = jsonObject.getJSONObject(i).getString("location");
+				String value = jsonObject.getJSONObject(i).getString("value");
+	            locations.add(new Location());
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            
+        }
+		
+	}
+
+
+	public void setSymptomIDs(JSONArray jsonArray) {
+		for(int i = 0; i < jsonArray.length(); i++){
+            try {
+            	if(jsonArray.getJSONObject(i).getBoolean("val")){
+            		symptomIDs.add(jsonArray.getJSONObject(i).getInt("id"));
+            	}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            
+        }
+		
+	}
+	
+	public void setTriggerIDs(JSONArray jsonArray) {
+		for(int i = 0; i < jsonArray.length(); i++){
+            try {
+            	if(jsonArray.getJSONObject(i).getBoolean("val")){
+            		triggerIDs.add(jsonArray.getJSONObject(i).getInt("id"));
+            	}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            
+        }
+		
 	}
 }
 
