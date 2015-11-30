@@ -4,7 +4,13 @@
   <artifactId>Chronic</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
+  
   <dependencies>
+  	<dependency>
+ 		<groupId>com.google.guava</groupId>
+ 		<artifactId>guava</artifactId>
+ 		<version>18.0</version>
+	</dependency>
   	<dependency>
 		<groupId>com.thetransactioncompany</groupId>
 		<artifactId>cors-filter</artifactId>
