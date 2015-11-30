@@ -185,11 +185,11 @@ public class Headache implements Serializable {
 			Object jsonObject = gson.toJson(this);
 			// Create a context JSON map containing prefixes and definitions
 			String context = "\"@context\": {"+
-			"\"description\": \"http://example.org/description\""+
-			"\"discrete\": \"http://example.org/discrete\""+
-			"\"location\": \"http://example.org/location\""+
-			"\"semantics\": \"http://example.org/semantics\""+
-			"\"unit\": \"http://example.org/unit\""+
+			"\"description\": \"http://example.org/description\","+
+			"\"discrete\": \"http://example.org/discrete\","+
+			"\"location\": \"http://example.org/location\","+
+			"\"semantics\": \"http://example.org/semantics\","+
+			"\"unit\": \"http://example.org/unit\","+
 			"\"value\": \"http://example.org/value\""+
 			"}";
 			
