@@ -29,7 +29,7 @@ public class VisualizationService {
 		
              String context = "\"@context\": {"+
              "\"name\": \"http://example.org/name\","+
-             "\"semanticName\": \"http://example.org/semanticName\","+
+             "\"semanticName\": {\"@id\": \"http://example.org/semanticName\",\"@type\": \"@id\"},"+
              "\"url\": \"http://example.org/url\""+
              "}";
              
