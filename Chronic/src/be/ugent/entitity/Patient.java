@@ -5,6 +5,8 @@ import java.io.Serializable;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.google.gson.Gson;
+
 @XmlRootElement(name = "patient")
 public class Patient implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -17,6 +19,7 @@ public class Patient implements Serializable {
 	private String birthDate;
 	private boolean isEmployed;
 	private String password;
+	private Drug[] dailyMedicines;
 
 	public enum relation{
 		GETROUWD, IN_RELATIE, VRIJGEZEL
@@ -26,6 +29,27 @@ public class Patient implements Serializable {
 	private String diagnosis;
 	
 	
+	
+	public Drug[] getDailyMedicines() {
+		return dailyMedicines;
+	}
+
+
+	public void setDailyMedicines(Drug[] dailyMedicines) {
+		this.dailyMedicines = dailyMedicines;
+	}
+
+
+	public relation getRelation() {
+		return relation;
+	}
+
+
+	public void setRelation(relation relation) {
+		this.relation = relation;
+	}
+
+
 	public Patient() {
 		// TODO Auto-generated constructor stub
 	}
@@ -131,6 +155,7 @@ public class Patient implements Serializable {
 	
 	@Override
 	public String toString(){
+		Gson gson = new Gson();
 		String returnString = "{";
 		returnString += "\"patientID\":"+patientID+",\n"+
 		"\"firstName\":\""+firstName+"\",\n"+
@@ -143,6 +168,7 @@ public class Patient implements Serializable {
 				"\"relation\":"+relation+",\n"+
 		"\"advice\":\""+advice+"\",\n"+
 				"\"diagnosis\":\""+diagnosis+"\"\n"+
+		"\"dailyMedicines\":"+gson.toJson(dailyMedicines)+"\"\n"+
 		"}";
 		return returnString;
 	}
