@@ -88,8 +88,8 @@ public class PatientService {
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Response addUser(Patient user){
 		
-//		System.out.println("pat: "+user);
-//		System.out.println("Patient requested to add: "+user.toString());
+		System.out.println("pat: "+user);
+		System.out.println("Patient requested to add: "+user.toString());
 		Gson gson = new Gson();
 		Patient toAdd = gson.fromJson(user.toString(), Patient.class);
 //		System.out.println("Patient to add:"+toAdd);
