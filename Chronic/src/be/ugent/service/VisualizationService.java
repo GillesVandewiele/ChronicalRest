@@ -69,22 +69,71 @@ public class VisualizationService {
 	@GET
 	@Path("/sensors/headache_intensities")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getAllHeadachesForAllPatients() {
+	public Response getAllHeadachesForAllPatients(@QueryParam("patientID") String patientID) {
 		PatientDao patientDao = new PatientDao();
+		HeadacheDao headacheDao = new HeadacheDao();
+		if (patientID != null) {
+			// Create a context JSON map containing prefixes and definitions
+			String context = "\"@context\": {" + "\"description\": \"http://example.org/description\","
+					+ "\"discrete\": \"http://example.org/discrete\","
+					+ "\"location\": {\"@id\": \"http://example.org/location\",\"@type\": \"@id\"},"
+					+ "\"semantics\": \"http://example.org/semantics\"," + "\"unit\": \"http://example.org/unit\","
+					+ "\"value\": \"http://example.org/value\"" +
+
+			"}";
+			String output = "{" + context;
+
+			System.out.println("Patient: " + patientID);
+
+			Random rand = new Random();
+			// \"description\": \"Test\"
+
+			String values = "{\"test\":\"test\", \"@id\":"
+					+ "\"http://localhost:8080/Chronic/rest/VisualizationService/sensors/headache_intensities?patientID="
+					+ patientID + "\"," + "\"description\":" + "\"Hoofdpijn Intensiteiten\" ," + "\"discrete\": \"true\","
+					+ "\"location\": \"" + "null\"," + "\"semantics\": \""+
+					"http://localhost:8080/Chronic/rest/VisualizationService/sensors/semantics/headache_intensities?patientID="+patientID+
+					"\"," + "\"unit\": \"\"," + "\"value\": \""
+					+ (0 + rand.nextInt(11)) + "" + "\"}";
+			output += "," + values + "}";
+			Object o = null;
+			try {
+				o = JsonLdProcessor.expand(JSON.parse(output));
+			} catch (JsonLdError e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			// return Response.ok(JsonUtils.toPrettyString(compact)).build();
+
+			try {
+				return Response.ok(JsonUtils.toPrettyString(o)).build();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return Response.status(400).build();
+		}
+
 		Integer[] patientIDs = patientDao.getAllPatients();
 
 		// Multimap<String, Pair> multiMap = ArrayListMultimap.create();
 
 		// Create a context JSON map containing prefixes and definitions
 		String context = "\"@context\": {" + "\"description\": \"http://example.org/description\","
-				+ "\"discrete\": \"http://example.org/discrete\"," + "\"location\": \"http://example.org/location\","
-				+ "\"semantics\": \"http://example.org/semantics\"," + "\"unit\": \"http://example.org/unit\","
-				+ "\"value\": \"http://example.org/value\"" + "}";
+				+ "\"discrete\": \"http://example.org/discrete\","
+				+ "\"location\": {\"@id\": \"http://example.org/location\",\"@type\": \"@id\"},"
+				+ "\"semantics\": \"http://example.org/semantics\"," 
+				+ "\"unit\": \"http://example.org/unit\","
+				+ "\"value\": \"http://example.org/value\"" +
 
+		"}";
 
 		String values = "[";
-
+		String objectLijst = "[";
+		String output = "{" + context;
 		for (Integer integer : patientIDs) {
+			System.out.println("Patient: " + integer);
 			// HeadacheDao headacheDao = new HeadacheDao();
 			// for (Headache headache :
 			// headacheDao.getAllHeadachesForPatient(integer)) {
@@ -93,38 +142,53 @@ public class VisualizationService {
 			// }
 			// }
 
-			
 			Random rand = new Random();
 			// \"description\": \"Test\"
-			values += "{\"id\":" + "\"" + integer + "\"," + "\"description\":"
-					+ "\"Hoofdpijn Intensiteiten\" ," + "\"discrete\": \"true\"," + "\"location\": \""
-					+ patientDao.getPatienFromId(integer + "").getFullName() + "\","
-					+ "\"semantics\": \"null\"," + "\"unit\": \"\"," + "\"value\": \"" + (0 + rand.nextInt(11)) + ""
-					+ "\"},";
-			
-			;
+
+			values = "{\"test\":\"test\", \"@id\":"
+					+ "\"http://localhost:8080/Chronic/rest/VisualizationService/sensors/headache_intensities?patientID="
+					+ integer + "\"," + "\"description\":" + "\"Hoofdpijn Intensiteiten\" ," + "\"discrete\": \"true\","
+					+ "\"location\": \"" + "null\"," + "\"semantics\": \""+"http://localhost:8080/Chronic/rest/VisualizationService/sensors/semantics/headache_intensities?patientID="+integer+"\"," + "\"unit\": \"\"," + "\"value\": \""
+					+ (0 + rand.nextInt(11)) + "" + "\"}";
+			output += "," + values + "}";
+			Object o;
+			try {
+				o = JsonLdProcessor.expand(JSON.parse(output));
+				// System.out.println("\n=========================="+o.toString().substring(1,
+				// o.toString().length()-1));
+				objectLijst += o.toString().substring(1, o.toString().length() - 1) + ",";
+				output = "{" + context;
+			} catch (JsonLdError e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			// return Response.ok(JsonUtils.toPrettyString(compact)).build();
 
 		}
-		values+="]";
-		String output = "{" + context + "," + values + "}";
-
-		Object compact;
-		try {
-			compact = JsonLdProcessor.expand(JSON.parse(output));
-			System.out.println(compact + "");
-			return Response.ok(JsonUtils.toPrettyString(compact)).build();
-		} catch (JsonLdError e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonGenerationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return Response.status(422).build();
-
+		objectLijst = objectLijst.substring(0, objectLijst.length() - 1);
+		objectLijst += "]";
+		System.out.println("Hallo: "+objectLijst);
+		return Response.ok(objectLijst).build();
 	}
 
+	@GET
+	@Path("/sensors/semantics/headache_intensities")
+	@Produces({ MediaType.TEXT_PLAIN })
+	public Response getHeadacheSemantics(@HeaderParam("Authorization") String header,
+			@QueryParam("patientID") String patientID) {
+		PatientDao patientDao = new PatientDao();
+		HeadacheDao headacheDao = new HeadacheDao();
+		if (patientID == null) {
+			return Response
+					.ok(headacheDao.getSemantics("<http://localhost:8080/Chronic/rest/VisualizationService/sensors/headache_intensities>"))
+					.build();
+		}
+		if (patientDao.getPatienFromId(patientID) != null)
+			return Response.ok(headacheDao.getSemantics(
+					"<http://localhost:8080/Chronic/rest/VisualizationService/sensors/headache_intensities?patientID=" + patientID + ">"))
+					.build();
+		else
+			return Response.status(404).build();
+	}
 }
