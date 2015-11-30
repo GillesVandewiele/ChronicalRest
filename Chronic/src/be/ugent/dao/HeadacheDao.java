@@ -29,6 +29,7 @@ public class HeadacheDao {
 		List<Headache> list = new ArrayList<Headache>();
 		while (cursor.hasNext()) {
 			DBObject o = cursor.next();
+			System.out.println("JSON object:"+o.toString());
 			Headache headache = gson.fromJson(o.toString(), Headache.class);
 			list.add(headache);
 		}
@@ -39,7 +40,7 @@ public class HeadacheDao {
 		DBCollection collection = db.getCollection("headache");
 		// convert JSON to DBObject directly
 		BasicDBObject bdbo = new BasicDBObject();
-		bdbo.put("patientID", patient.getPatientID());
+		bdbo.put("headacheID", headache.getHeadacheID());
 		DBCursor curs = collection.find(bdbo);
 		if(curs.count()>0)
 			return false;

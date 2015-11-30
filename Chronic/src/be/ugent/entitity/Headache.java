@@ -1,24 +1,40 @@
 package be.ugent.entitity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
+import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
+import com.github.jsonldjava.core.JsonLdOptions;
+import com.github.jsonldjava.core.JsonLdProcessor;
+import com.github.jsonldjava.utils.JsonUtils;
+import com.google.gson.Gson;
+import com.mongodb.util.JSON;
+
+import be.ugent.dao.PatientDao;
 
 @XmlRootElement(name = "patient")
 public class Headache implements Serializable {
 	private static final long serialVersionUID = 1L;
 	//primary key
 	private int headacheID;
-	private Map<Date, Integer> intensityValues;
+	private ArrayList<Pair> intensityValues;
 	
 	//foreign keys
 	private int patientID;
 	
-	private Date end;
+	private String end;
 	
 	private Set<Location> locations;
 	private Set<Integer> symptomIDs;
@@ -50,22 +66,23 @@ public class Headache implements Serializable {
 	}
 
 
-	public Map<Date, Integer> getIntensityValues() {
+	public ArrayList<Pair> getIntensityValues() {
 		return intensityValues;
 	}
 
 
-	public void setIntensityValues(Map<Date, Integer> intensityValues) {
+	public void setIntensityValues(ArrayList<Pair> intensityValues) {
 		this.intensityValues = intensityValues;
 	}
 
 	public void addIntensityValue(Date key, int value){
-		intensityValues.put(key, value);
+		Pair pair = new Pair(key.toString(), ""+value);
+		intensityValues.add(pair);
 	}
 	
 	public boolean removeIntensityValue(Date date){
-		for (Date key : intensityValues.keySet()) {
-			if(key.getTime() == date.getTime()){
+		for (Pair key : intensityValues) {
+			if(key.getKey().equals(date+"")){
 				intensityValues.remove(key);
 				return true;
 			}
@@ -74,12 +91,12 @@ public class Headache implements Serializable {
 		
 	}
 
-	public Date getEnd() {
+	public String getEnd() {
 		return end;
 	}
 
 
-	public void setEnd(Date end) {
+	public void setEnd(String end) {
 		this.end = end;
 	}
 
@@ -158,5 +175,88 @@ public class Headache implements Serializable {
 		return triggerIDs.remove(id);
 	}
 
+	public Object toJsonLD(){
+		try {
+			// Read the file into an Object (The type of this object will be a List, Map, String, Boolean,
+			// Number or null depending on the root object in the file).
+			
+			Gson gson = new Gson();
+			Object jsonObject = gson.toJson(this);
+			// Create a context JSON map containing prefixes and definitions
+			String context = "\"@context\": {"+
+			"\"description\": \"http://example.org/description\""+
+			"\"discrete\": \"http://example.org/discrete\""+
+			"\"location\": \"http://example.org/location\""+
+			"\"semantics\": \"http://example.org/semantics\""+
+			"\"unit\": \"http://example.org/unit\""+
+			"\"value\": \"http://example.org/value\""+
+			"}";
+			
+			PatientDao patientDao = new PatientDao();
+			Random rand = new Random();
+//			\"description\": \"Test\"
+			String values = "\"id\":"+"\""+getPatientID()+"\","+
+							"\"description\":"+"\"Hoofdpijn Intensiteiten\" ,"+
+							"\"discrete\": \"true\","+
+							"\"location\": \""+ patientDao.getPatienFromId(this.getPatientID()+"").getFullName()+"\","+
+							"\"semantics\": \"null\","+
+							"\"unit\": \"\","+
+							"\"value\": \""+(5+rand.nextInt(1))+""+"\",";
+							
+					
+			
+			
+			;
+			String output = "{"+context+","+values +"}";
+			
+			Object compact =JsonLdProcessor.expand(JSON.parse(output)); 
+//					JsonLdProcessor.expand(JSON.parse(graph), context, options);
+			System.out.println(compact+"");
+			// Print out the result (or don't, it's your call!)
+//			System.out.println(JsonUtils.toPrettyString(compact));
+			return JsonUtils.toPrettyString(compact);
+		}catch(Exception e){
+			System.err.println("ER ZIT EEN FOUT IN DE HEADACHE TO LD SHIT");
+		}
+		return "";
+	}
+	
+	public JSONObject toJSON(){
+		Gson gson = new Gson();
+		JSONObject result = new JSONObject();
+		try {
+			result.append("headacheID", headacheID);
+			JSONArray intensVals = new JSONArray();
+			for (Pair pair : intensityValues) {
+				intensVals.put(gson.toJson(pair));
+			}
+			result.append("intensityValues", intensVals);
+			result.append("patientID", patientID);
+			result.append("end", end);
+			JSONArray locs = new JSONArray();
+			for (Location location : locations) {
+				locs.put(location);
+			}
+			
+			result.append("locations", locs);
+			
+			JSONArray sympts = new JSONArray();
+			for (Integer integer : symptomIDs) {
+				sympts.put(integer);
+			}
+			
+			result.append("symptomIDs", sympts);
+			
+			JSONArray triggs = new JSONArray();
+			for (Integer integer : triggerIDs) {
+				sympts.put(integer);
+			}
+			result.append("triggerIDs", triggs);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		return result;
+	}
 }
 

@@ -1,5 +1,8 @@
 package be.ugent.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -12,12 +15,19 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
+import com.github.jsonldjava.utils.JsonUtils;
 import com.google.gson.Gson;
+import com.mongodb.util.JSON;
 
 import be.ugent.Authentication;
 import be.ugent.dao.HeadacheDao;
 import be.ugent.dao.PatientDao;
 import be.ugent.entitity.Headache;
+import be.ugent.entitity.Pair;
 import be.ugent.entitity.Patient;
 
 @Path("/HeadacheService")
@@ -26,7 +36,7 @@ public class HeadacheService {
 	PatientDao patientDao = new PatientDao();
 	Gson gson = new Gson();
 	
-	@POST
+	@GET
 	@Path("/headaches")
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Consumes({MediaType.APPLICATION_JSON})
@@ -35,28 +45,68 @@ public class HeadacheService {
 		return Response.ok(headacheDao.getAllHeadachesForPatient(Integer.parseInt(patientID))).build();
 	}
 	
+	@GET
+	@Path("/headaches/ld")
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Response getFirstHeadache( @QueryParam("patientID") String patientID) {
+		HeadacheDao headacheDao = new HeadacheDao();
+		Object jaja = headacheDao.getAllHeadachesForPatient(Integer.parseInt(patientID)).get(0).toJsonLD();
+		return Response.ok(jaja).build();
+		
+	}
+	
 
-	@PUT
+	@POST
 	@Path("/headaches")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Response addHeadache(Headache headache, @HeaderParam("Authorization") String header, @QueryParam("patientID") String patientID) {
-		System.out.println("header:"+header);
+	public Response addHeadache(String headache, @HeaderParam("Authorization") String header, @QueryParam("patientID") String patientID) {
+		
+//		System.out.println("header:"+header);
 		if(!Authentication.isAuthorized(header)){
 			return Response.status(403).build();
 		}
-		Headache toAdd = headache;
-		
-		if(toAdd == null){
+		if(headache == null){
 			return Response.status(422).build();
 		}
-		
-		System.out.println("Got request to add headache: "+gson.toJson(headache));
+		JSONObject headacheJSON = null;
+		try {
+			headacheJSON = new JSONObject(headache);
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		System.out.println("object:"+headacheJSON);
+		Headache toAdd = new Headache();
+		try {
+			toAdd.setEnd(""+headacheJSON.get("end"));
+			toAdd.setLocations(null);
+			toAdd.setSymptomIDs(null);
+			toAdd.setTriggerIDs(null);
+			ArrayList<Pair> values = new ArrayList<>();
+			JSONArray array = headacheJSON.getJSONArray("intensityValues");
+	        for(int i = 0; i < array.length(); i++){
+	            String key = array.getJSONObject(i).getString("key");
+	            String value = array.getJSONObject(i).getString("value");
+	            values.add(new Pair(key, value));
+	        }
+			
+			
+			
+			toAdd.setIntensityValues(values);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+		System.out.println("JSON?"+headache);
+		System.out.println("Got request to add headache: "+toAdd.toJSON());
 		
 		
 		toAdd.setHeadacheID(headacheDao.getNewHeadacheID());
 		
 		
-		System.out.println("Created headache: "+gson.toJson(toAdd));
+		System.out.println("Created headache: "+toAdd.toJSON());
 		
 		//TODO return object with correct ID (now id will not be updated in the return object
 		Patient patient = patientDao.getPatienFromId(patientID);
@@ -64,7 +114,7 @@ public class HeadacheService {
 			//return headache successfully created
 			return Response.status(201).entity(toAdd).build();
 		}else{
-			//return record was already in database, or was wrong format
+//			return record was already in database, or was wrong format
 			return Response.status(409).build();
 		}
 	}

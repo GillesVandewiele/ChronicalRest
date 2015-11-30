@@ -146,5 +146,11 @@ public class Patient implements Serializable {
 		"}";
 		return returnString;
 	}
+
+
+	public String getFullName() {
+		// TODO Auto-generated method stub
+		return getFirstName()+" "+getLastName();
+	}
 	
 }
