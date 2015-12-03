@@ -167,8 +167,8 @@ public class Patient implements Serializable {
 		"\"password\":\""+password+"\",\n"+
 				"\"relation\":"+relation+",\n"+
 		"\"advice\":\""+advice+"\",\n"+
-				"\"diagnosis\":\""+diagnosis+"\"\n"+
-		"\"dailyMedicines\":"+gson.toJson(dailyMedicines)+"\"\n"+
+				"\"diagnosis\":\""+diagnosis+"\",\n"+
+		"\"dailyMedicines\":"+"null"+"\"\n"+
 		"}";
 		return returnString;
 	}

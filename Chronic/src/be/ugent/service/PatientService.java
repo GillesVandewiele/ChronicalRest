@@ -91,7 +91,7 @@ public class PatientService {
 		System.out.println("pat: "+user);
 		System.out.println("Patient requested to add: "+user.toString());
 		Gson gson = new Gson();
-		Patient toAdd = gson.fromJson(user.toString(), Patient.class);
+		Patient toAdd = user;
 //		System.out.println("Patient to add:"+toAdd);
 		if(patientDao.storePatient(toAdd)){
 			//return patient successfully created
