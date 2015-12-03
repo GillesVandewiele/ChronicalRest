@@ -15,7 +15,7 @@ public class MongoDBSingleton {
  private static DB db ;
   
   
- private static final String dbHost = "localhost";
+ private static final String dbHost = "tw06v033.ugent.be";
  private static final int dbPort = 9000;
  private static final String dbName = "CHRONIC";
  
