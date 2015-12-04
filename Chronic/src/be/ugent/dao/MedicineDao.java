@@ -52,7 +52,7 @@ public class MedicineDao {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
-			medicine.setDate(result);
+			medicine.setDate(result+"");
 			medicine.setDrugID(Integer.parseInt(""+o.get("medicineID")));
 			medicine.setMedicineID(Integer.parseInt(""+o.get("medicineID")));
 			medicine.setPatientID(patient.getPatientID());

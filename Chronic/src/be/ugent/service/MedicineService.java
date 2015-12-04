@@ -4,6 +4,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -12,6 +13,7 @@ import com.google.gson.Gson;
 
 import be.ugent.Authentication;
 import be.ugent.dao.MedicineDao;
+import be.ugent.entitity.Drug;
 import be.ugent.entitity.Medicine;
 
 @Path("/MedicineService")
@@ -19,6 +21,34 @@ public class MedicineService {
 	MedicineDao medicineDao = new MedicineDao();
 	Gson gson = new Gson();
 
+	@PUT
+	@Path("/medicines")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response addMedicine(Medicine medicine, @HeaderParam("Authorization") String header) {
+		System.out.println("header:" + header);
+		if (!Authentication.isAuthorized(header)) {
+			return Response.status(403).build();
+		}
+		Medicine toAdd = medicine;
+		
+		if (toAdd == null) {
+			return Response.status(422).build();
+		}
+
+		System.out.println("Got request to add medicine: " + gson.toJson(medicine));
+
+		toAdd.setMedicineID(medicineDao.getNewMedicineID());
+
+		System.out.println("Created medicine: " + gson.toJson(toAdd));
+
+		if (medicineDao.addMedicine(toAdd)) {
+			// return medicine successfully created
+			return Response.status(201).entity(medicineDao.getMedicine( toAdd.getDrugID(),toAdd.getPatientID())).build();
+		} else {
+			// return record was already in database, or was wrong format
+			return Response.status(409).build();
+		}
+	}
 	
 	@POST
 	@Path("/medicines/update")

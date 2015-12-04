@@ -14,7 +14,7 @@ public class Medicine implements Serializable {
 	private int patientID;
 	private int drugID;
 	
-	private Date Date;
+	private String date;
 	private float quantity;
 	
 		
@@ -53,13 +53,13 @@ public class Medicine implements Serializable {
 	}
 
 
-	public Date getDate() {
-		return Date;
+	public String getDate() {
+		return date;
 	}
 
 
-	public void setDate(Date date) {
-		Date = date;
+	public void setDate(String date) {
+		this.date = date;
 	}
 
 
