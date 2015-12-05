@@ -45,7 +45,7 @@
     <dependency>
 	  <groupId>com.owlike</groupId>
 	  <artifactId>genson</artifactId>
-	  <version>{{latest_version}}</version>
+	  <version>0.99</version>
 	</dependency>
   </dependencies>
   <build>
