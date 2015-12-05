@@ -35,7 +35,7 @@ public class PatientService {
 //		System.out.println("Patient opgevraagd met naam: " + firstName + " " + lastName);
 		Patient retrieved = patientDao.getPatient(firstName, lastName);
 		retrieved.setPassword("");
-		return Response.accepted(retrieved+"").build();
+		return Response.ok(retrieved+"").build();
 
 	}
 	
@@ -65,7 +65,7 @@ public class PatientService {
 //		System.out.println("User ingelogd met email:"+patientDao.getPatientFromHeader(header));
 		Patient retrieved = patientDao.getPatientFromHeader(header);
 		retrieved.setPassword("");
-		return Response.accepted(retrieved+"").build();
+		return Response.ok(retrieved+"").build();
 
 	}
 	
@@ -75,7 +75,7 @@ public class PatientService {
 	public Response hello(String user){
 		
 		System.out.println("Hello "+user);
-		return Response.accepted("Hello "+user).build();
+		return Response.ok("Hello "+user).build();
 		
 	}
 
