@@ -2,7 +2,6 @@ package be.ugent.dao;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -10,7 +9,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
-import com.owlike.genson.Genson;
 
 import be.ugent.MongoDBSingleton;
 import be.ugent.entitity.Headache;

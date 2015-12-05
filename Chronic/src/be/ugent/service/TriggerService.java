@@ -2,7 +2,6 @@ package be.ugent.service;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -33,10 +32,8 @@ public class TriggerService {
 	@GET
 	@Path("/triggers")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public List<Trigger> getAllTriggers(@Context HttpHeaders header, @Context HttpServletResponse response) {
-		response.addHeader("Access-Control-Allow-Origin", "*");
-		return triggerDao.getAllTriggers();
-
+	public Response getAllTriggers() {
+		return Response.ok(triggerDao.getAllTriggers()).build();
 	}
 
 	@PUT

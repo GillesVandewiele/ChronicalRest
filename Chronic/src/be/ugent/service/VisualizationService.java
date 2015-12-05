@@ -106,10 +106,8 @@ public class VisualizationService {
 			}
 
 			// return Response.ok(JsonUtils.toPrettyString(compact)).build();
-			
-			
-			return Response.ok((o)).build();
-//			return Response.status(400).build();
+
+			return Response.ok(o).build();
 		}
 
 		Integer[] patientIDs = patientDao.getAllPatients();
