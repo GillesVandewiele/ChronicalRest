@@ -10,7 +10,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
-import com.owlike.genson.Genson;
 
 import be.ugent.MongoDBSingleton;
 import be.ugent.entitity.Drug;
