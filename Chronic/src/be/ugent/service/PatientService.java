@@ -45,6 +45,7 @@ public class PatientService {
 	@Path("/advice")
 	@Produces({ MediaType.TEXT_PLAIN })
 	public Response getAdvice(@QueryParam("patientID") String patientID, @HeaderParam("Authorization") String header) {
+		
 		if(!Authentication.isAuthorized(header)){
 			return Response.status(403).build();
 		}
@@ -59,6 +60,7 @@ public class PatientService {
 	@Path("/login")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response login(@HeaderParam("Authorization") String header) {
+		System.out.println("JAJAJAJA INGELOGD, MERCI GILLES, GOE GEDAAN!);
 		if(!Authentication.isAuthorized(header)){
 			return Response.status(403).build();
 		}		
