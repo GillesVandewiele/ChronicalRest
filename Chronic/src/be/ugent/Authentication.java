@@ -35,7 +35,7 @@ public class Authentication {
 			return false;
 		}
 		String requestEmail = decodedArray[0];
-//		System.out.println("Request email: " + requestEmail);
+		System.out.println("Request email for autorhization: " + requestEmail);
 		String requestRest = decodedArray[1];
 
 		Patient patient = getPatient(requestEmail);
@@ -51,7 +51,7 @@ public class Authentication {
 			e.printStackTrace();
 		}
 		byte[] digest = md.digest();
-//		System.out.println("secondpart: "+org.bouncycastle.util.encoders.Hex.toHexString(digest));
+		System.out.println("secondpart of autoriation: "+org.bouncycastle.util.encoders.Hex.toHexString(digest));
 		if (org.bouncycastle.util.encoders.Hex.toHexString(digest).equals(requestRest)) {
 			return true;
 		}
