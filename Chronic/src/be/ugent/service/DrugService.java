@@ -88,6 +88,7 @@ public class DrugService {
 	@Path("/drugs")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getAllDrugs() {
+		System.out.println("Get All drugs received");
 		return Response.ok(drugDao.getAllDrugs()).build();
 	}
 
