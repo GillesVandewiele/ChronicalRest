@@ -19,7 +19,6 @@ public class Patient implements Serializable {
 	private String birthDate;
 	private boolean isEmployed;
 	private String password;
-	private Drug[] dailyMedicines;
 
 	public enum relation{
 		GETROUWD, IN_RELATIE, VRIJGEZEL
@@ -27,18 +26,6 @@ public class Patient implements Serializable {
 	private relation relation;
 	private String advice;
 	private String diagnosis;
-	
-	
-	
-	public Drug[] getDailyMedicines() {
-		return dailyMedicines;
-	}
-
-
-	public void setDailyMedicines(Drug[] dailyMedicines) {
-		this.dailyMedicines = dailyMedicines;
-	}
-
 
 	public relation getRelation() {
 		return relation;
@@ -167,8 +154,7 @@ public class Patient implements Serializable {
 		"\"password\":\""+password+"\",\n"+
 				"\"relation\":"+relation+",\n"+
 		"\"advice\":\""+advice+"\",\n"+
-				"\"diagnosis\":\""+diagnosis+"\",\n"+
-		"\"dailyMedicines\":"+"null"+"\"\n"+
+				"\"diagnosis\":\""+diagnosis+"\"\n"+
 		"}";
 		return returnString;
 	}

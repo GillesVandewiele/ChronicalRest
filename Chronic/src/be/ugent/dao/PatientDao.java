@@ -79,10 +79,9 @@ public class PatientDao {
 		}
 		return max + 1;
 	}
-	
-	public String getSemantics(String identity){
-		return  "@prefix ex: "+"<http://example.org/>.\n" +
-				identity + " a ex:Location.\n";
+
+	public String getSemantics(String identity) {
+		return "@prefix ex: " + "<http://example.org/>.\n" + identity + " a ex:Location.\n";
 	}
 
 	public boolean storePatient(Patient patient) {
@@ -176,14 +175,14 @@ public class PatientDao {
 		DBCollection coll = db.getCollection("patient");
 		BasicDBObject whereQuery = new BasicDBObject();
 		Cursor cursor = coll.find(whereQuery);
-		while(cursor.hasNext()){
+		while (cursor.hasNext()) {
 			DBObject o = cursor.next();
 			Gson gson = new Gson();
 			Patient patient = gson.fromJson(o.toString(), Patient.class);
 			ids.add(patient.getPatientID());
 		}
 		Integer[] temp = new Integer[ids.size()];
-		return  ids.toArray(temp);
+		return ids.toArray(temp);
 	}
 
 }
