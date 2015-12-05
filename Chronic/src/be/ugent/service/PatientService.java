@@ -60,7 +60,7 @@ public class PatientService {
 	@Path("/login")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response login(@HeaderParam("Authorization") String header) {
-		System.out.println("JAJAJAJA INGELOGD, MERCI GILLES, GOE GEDAAN!);
+		System.out.println("JAJAJAJA INGELOGD, MERCI GILLES, GOE GEDAAN!");
 		if(!Authentication.isAuthorized(header)){
 			return Response.status(403).build();
 		}		
