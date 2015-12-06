@@ -86,7 +86,7 @@ public class PatientService {
 
 	@POST
 	@Path("/patients")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes("application/json")
 	public Response addUser(Patient user){
 		
 		System.out.println("pat: "+user);
