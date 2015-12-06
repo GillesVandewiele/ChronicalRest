@@ -32,14 +32,22 @@ public class TriggerService {
 	@GET
 	@Path("/triggers")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getAllTriggers() {
+	public Response getAllTriggers(@HeaderParam("Authorization") String header) {
+		System.out.println("header:" + header);
+		if (!Authentication.isAuthorized(header)) {
+			return Response.status(403).build();
+		}
 		return Response.ok(triggerDao.getAllTriggers()).build();
 	}
 
 	@PUT
 	@Path("/triggers")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Response addTrigger(Trigger trigger){
+	public Response addTrigger(Trigger trigger,@HeaderParam("Authorization") String header) {
+		System.out.println("header:" + header);
+		if (!Authentication.isAuthorized(header)) {
+			return Response.status(403).build();
+		}
 		System.out.println("Got request to add Trigger: "+gson.toJson(trigger));
 		
 		Trigger toAdd = new Trigger();
