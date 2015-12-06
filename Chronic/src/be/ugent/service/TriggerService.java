@@ -39,7 +39,7 @@ public class TriggerService {
 	@PUT
 	@Path("/triggers")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Response addUser(Trigger trigger){
+	public Response addTrigger(Trigger trigger){
 		System.out.println("Got request to add Trigger: "+gson.toJson(trigger));
 		
 		Trigger toAdd = new Trigger();
