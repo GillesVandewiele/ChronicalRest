@@ -86,13 +86,13 @@ public class PatientService {
 
 	@POST
 	@Path("/patients")
-	@Consumes("application/json")
-	public Response addUser(Patient user){
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response addUser(String user){
 		
 		System.out.println("pat: "+user);
 		System.out.println("Patient requested to add: "+user.toString());
 		Gson gson = new Gson();
-		Patient toAdd = user;
+		Patient toAdd = gson.fromJson(user, Patient.class);
 		if(toAdd.getPatientID()==0){
 			PatientDao patientDao = new PatientDao();
 			toAdd.setPatientID(patientDao.getNewId());
