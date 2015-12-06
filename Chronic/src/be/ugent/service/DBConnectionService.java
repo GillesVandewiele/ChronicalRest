@@ -32,14 +32,13 @@ public class DBConnectionService {
 	
 	@GET
 	@Path("/status")
-	@Produces(MediaType.APPLICATION_JSON)
 	public Response getStatus() {
 		System.out.println("Database status opgevraagd");
 		Gson gson = new Gson();
 		try{
 			DrugDao drugDao = new DrugDao();
 			if(MongoDBSingleton.getInstance().isOnline("CHRONIC"))
-				return Response.ok(drugDao.getAllDrugs()).build();
+				return Response.ok().build();
 			else
 				return Response.status(503).build();
 		}catch(Exception e){
