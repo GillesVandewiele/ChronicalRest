@@ -19,7 +19,7 @@
 		</init-param>
 		<init-param>
 			<param-name>cors.supportedHeaders</param-name>
-			<param-value>accept, authorization, origin</param-value>
+			<param-value>accept, authorization, origin, content-type, x-requested-with,access-control-request-method,access-control-request-headers</param-value>
 		</init-param>
 		<init-param>
 			<param-name>cors.supportedMethods</param-name>
