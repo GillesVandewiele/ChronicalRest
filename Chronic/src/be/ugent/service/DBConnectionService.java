@@ -35,9 +35,10 @@ public class DBConnectionService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getStatus() {
 		System.out.println("Database status opgevraagd");
+		Gson gson = new Gson();
 		try{
 			if(MongoDBSingleton.getInstance().isOnline("CHRONIC"))
-				return Response.ok("{\"status\":\"ok\"}").build();
+				return Response.ok(gson.toJson("ok")).build();
 			else
 				return Response.status(503).build();
 		}catch(Exception e){
