@@ -93,6 +93,10 @@ public class PatientService {
 		System.out.println("Patient requested to add: "+user.toString());
 		Gson gson = new Gson();
 		Patient toAdd = user;
+		if(toAdd.getPatientID()==0){
+			PatientDao patientDao = new PatientDao();
+			toAdd.setPatientID(patientDao.getNewId());
+		}
 //		System.out.println("Patient to add:"+toAdd);
 		if(patientDao.storePatient(toAdd)){
 			//return patient successfully created
