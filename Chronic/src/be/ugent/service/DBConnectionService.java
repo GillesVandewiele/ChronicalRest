@@ -33,12 +33,9 @@ public class DBConnectionService {
 	@GET
 	@Path("/status")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getStatus(@HeaderParam("Authorization") String header) {
+	public Response getStatus() {
 		
 		try{
-			if(!Authentication.isAuthorized(header)){
-				return Response.status(403).build();
-			}
 			if(MongoDBSingleton.getInstance().isOnline("CHRONIC"))
 				return Response.ok().build();
 			else
