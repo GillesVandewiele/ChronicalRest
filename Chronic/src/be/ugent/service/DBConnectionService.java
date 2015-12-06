@@ -37,17 +37,13 @@ public class DBConnectionService {
 		System.out.println("Database status opgevraagd");
 		Gson gson = new Gson();
 		try{
+			DrugDao drugDao = new DrugDao();
 			if(MongoDBSingleton.getInstance().isOnline("CHRONIC"))
-				return Response.ok(gson.toJson("ok")).build();
+				return Response.ok(drugDao.getAllDrugs()).build();
 			else
 				return Response.status(503).build();
 		}catch(Exception e){
 			return Response.status(503).build();
 		}
-		
-		
-
-	}
-
-	
+	}	
 }
