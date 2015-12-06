@@ -32,9 +32,9 @@ public class DBConnectionService {
 	
 	@GET
 	@Path("/status")
-	@Produces({ MediaType.APPLICATION_JSON })
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response getStatus() {
-		
+		System.out.println("Database status opgevraagd");
 		try{
 			if(MongoDBSingleton.getInstance().isOnline("CHRONIC"))
 				return Response.ok().build();
