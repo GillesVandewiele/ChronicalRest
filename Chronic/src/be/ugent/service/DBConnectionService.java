@@ -37,7 +37,7 @@ public class DBConnectionService {
 		System.out.println("Database status opgevraagd");
 		try{
 			if(MongoDBSingleton.getInstance().isOnline("CHRONIC"))
-				return Response.ok("{\"status\":\"ok\"").build();
+				return Response.ok("{\"status\":\"ok\"}").build();
 			else
 				return Response.status(503).build();
 		}catch(Exception e){
