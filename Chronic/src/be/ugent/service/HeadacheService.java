@@ -77,7 +77,7 @@ public class HeadacheService {
 		if(!Authentication.isAuthorized(header)){
 			return Response.status(403).build();
 		}
-		if(headache == null){
+		if(headache == null || patientID==null || patientID.isEmpty()){
 			return Response.status(422).build();
 		}
 		JSONObject headacheJSON = null;
@@ -90,37 +90,37 @@ public class HeadacheService {
 		System.out.println("object:"+headacheJSON);
 		Headache toAdd = new Headache();
 		try {
-			toAdd.setEnd(""+headacheJSON.get("end"));
-//			toAdd.setLocations((JSONArray)headacheJSON.getJSONArray("location"));
-			toAdd.setSymptomIDs((JSONArray)headacheJSON.getJSONArray("symptoms"));
-			toAdd.setTriggerIDs((JSONArray)headacheJSON.getJSONArray("triggers"));
-			ArrayList<Pair> values = new ArrayList<>();
 			JSONArray array = headacheJSON.getJSONArray("intensityValues");
-	        for(int i = 0; i < array.length(); i++){
-	            String key = array.getJSONObject(i).getString("key");
-	            String value = array.getJSONObject(i).getString("value");
-	            values.add(new Pair(key, value));
-	        }
+			for (int i=0; i<array.length(); i++) {
+			    JSONObject item = array.getJSONObject(i);
+			    System.out.println("Item in intensityValues:"+item.toString());
+			    toAdd.addIntensityValue(item.getString("key"), item.getString("value"));
+			}
 			
+			toAdd.setEnd(headacheJSON.getString("end"));
 			
+			array = headacheJSON.getJSONArray("symptomIDs");
+			for (int i=0; i<array.length(); i++) {
+				System.out.println("Adding symptomID:"+array.get(i).toString());
+			    toAdd.addSymptomID(Integer.parseInt(array.get(i).toString()));
+			}
 			
-			toAdd.setIntensityValues(values);
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	
-		System.out.println("JSON?"+headache);
 		System.out.println("Got request to add headache: "+toAdd);
 		
 		
 		toAdd.setHeadacheID(headacheDao.getNewHeadacheID());
 		
 		
-		System.out.println("Created headache: "+JSON.parse(toAdd.toJSON().toString()));
+//		System.out.println("Created headache: "+JSON.parse(toAdd.toJSON().toString()));
 		
 		//TODO return object with correct ID (now id will not be updated in the return object
 		Patient patient = patientDao.getPatienFromId(patientID);
+		toAdd.setPatientID(Integer.parseInt(patientID));
 		if(headacheDao.addHeadacheForPatient(patient, toAdd)){
 			//return headache successfully created
 			return Response.status(201).entity(toAdd).build();
