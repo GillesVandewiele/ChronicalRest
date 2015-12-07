@@ -188,6 +188,19 @@ public class MedicineDao {
 		return medicine;
 	}
 	
+	public Object getMedicine(String date) {
+		DBCollection coll = db.getCollection("medicine");
+		BasicDBObject whereQuery = new BasicDBObject();
+		whereQuery.put("date", date);
+		DBCursor cursor = coll.find(whereQuery);
+		Medicine medicine = null;
+		while (cursor.hasNext()) {
+			DBObject o = cursor.next();
+			medicine = gson.fromJson(o.toString(), Medicine.class);
+		}
+		return medicine;
+	}
+	
 	public boolean deleteMedicine(Medicine medicine) {
 		DBCollection collection = db.getCollection("medicine");
 		// convert JSON to DBObject directly
