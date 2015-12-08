@@ -43,7 +43,7 @@ public class HeadacheService {
 	@Path("/headaches")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getAllHeadaches( @QueryParam("patientID") String patientID) {
-		
+		System.out.println("Alle hoofdpijnen opgevraagd van patient met id:"+patientID);
 		return Response.ok(headacheDao.getAllHeadachesForPatient(Integer.parseInt(patientID))).build();
 	}
 	
