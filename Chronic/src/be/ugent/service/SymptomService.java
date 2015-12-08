@@ -26,7 +26,11 @@ public class SymptomService {
 	@GET
 	@Path("/symptoms")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getAllSymptoms() {
+	public Response getAllSymptoms(@HeaderParam("Authorization") String header) {
+		System.out.println("header:" + header);
+		if (!Authentication.isAuthorized(header)) {
+			return Response.status(403).build();
+		}
 		return Response.ok(symptomDao.getAllSymptoms()).build();
 	}
 	

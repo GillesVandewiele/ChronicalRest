@@ -30,16 +30,16 @@ public class Headache implements Serializable {
 	private static final long serialVersionUID = 1L;
 	//primary key
 	private int headacheID;
-	private ArrayList<Pair> intensityValues;
+	private Pair[] intensityValues = new Pair[0];
 	
 	//foreign keys
 	private int patientID;
 	
 	private String end;
 	
-	private Set<Location> locations = new HashSet<Location>();
-	private Set<Integer> symptomIDs = new HashSet<Integer>();
-	private Set<Integer> triggerIDs = new HashSet<Integer>();
+	private Location[] locations = new Location[0];
+	private int[] symptomIDs = new int[0];
+	private int[] triggerIDs = new int[0];
 	
 		
 	public Headache() {
@@ -67,30 +67,35 @@ public class Headache implements Serializable {
 	}
 
 
-	public ArrayList<Pair> getIntensityValues() {
+	public Pair[] getIntensityValues() {
 		return intensityValues;
 	}
 
 
-	public void setIntensityValues(ArrayList<Pair> intensityValues) {
+	public void setIntensityValues(Pair[] intensityValues) {
 		this.intensityValues = intensityValues;
 	}
 
-	public void addIntensityValue(Date key, int value){
-		Pair pair = new Pair(key.toString(), ""+value);
-		intensityValues.add(pair);
+	public void addIntensityValue(String key, String value){
+		Pair pair = new Pair(key, ""+value);
+		Pair[] tempValues = new Pair[intensityValues.length+1];
+		for (int i = 0; i < intensityValues.length; i++) {
+			tempValues[i] = intensityValues[i];
+		}
+		tempValues[intensityValues.length] = pair;
+		this.intensityValues = tempValues;
 	}
 	
-	public boolean removeIntensityValue(Date date){
-		for (Pair key : intensityValues) {
-			if(key.getKey().equals(date+"")){
-				intensityValues.remove(key);
-				return true;
-			}
-		}
-		return false;
-		
-	}
+//	public boolean removeIntensityValue(Date date){
+//		for (Pair key : intensityValues) {
+//			if(key.getKey().equals(date+"")){
+//				intensityValues.remove(key);
+//				return true;
+//			}
+//		}
+//		return false;
+//		
+//	}
 
 	public String getEnd() {
 		return end;
@@ -102,79 +107,98 @@ public class Headache implements Serializable {
 	}
 
 
-	public Set<Location> getLocations() {
+	public Location[] getLocations() {
 		return locations;
 	}
 
 
-	public void setLocations(Set<Location> location) {
+	public void setLocations(Location[] location) {
 		this.locations = location;
 	}
 	
 	public void addLocation(Location loc){
-		locations.add(loc);
+		int length = this.locations.length;
+		Location[] tempLocations = new Location[length+1];
+	    System.arraycopy(this.locations, 0, tempLocations, 0, this.locations.length);
+	    tempLocations[length] = loc;
 	}
 	
-	public boolean removeLocation(Location loc){
-		for (Location location : locations) {
-			if(location.equals(loc)){
-				locations.remove(location);
-				return true;
-			}
-		}
-		return false;
-	}
+//	public boolean removeLocation(Location loc){
+//		for (Location location : locations) {
+//			if(location.equals(loc)){
+//				locations.remove(location);
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 
-	public Set<Integer> getSymptomIDs() {
+	public int[] getSymptomIDs() {
 		return symptomIDs;
 	}
 
 
-	public void setSymptomIDs(Set<Integer> symptoms) {
+	public void setSymptomIDs(int[] symptoms) {
 		this.symptomIDs = symptoms;
 	}
 
 	public void addSymptomID(Symptom symptom){
-		symptomIDs.add(symptom.getSymptomID());
+		int length = this.symptomIDs.length;
+		int[] tempSymptoms = new int[length+1];
+	    System.arraycopy(this.symptomIDs, 0, tempSymptoms, 0, this.symptomIDs.length);
+	    tempSymptoms[length] = symptom.getSymptomID();
+	    this.symptomIDs = tempSymptoms;
 	}
 	
 	public void addSymptomID(int id){
-		symptomIDs.add(id);
+		int length = this.symptomIDs.length;
+		int[] tempSymptoms = new int[length+1];
+	    System.arraycopy(this.symptomIDs, 0, tempSymptoms, 0, this.symptomIDs.length);
+	    tempSymptoms[length] = id;
+	    this.symptomIDs = tempSymptoms;
 	}
 	
-	public boolean removeSymptomID(Symptom symptom){
-		return symptomIDs.remove(symptom.getSymptomID());
-	}
-	
-	public boolean removeSymptomID(int id){
-		return symptomIDs.remove(id);
-		
-	}
+//	public boolean removeSymptomID(Symptom symptom){
+//		return symptomIDs.remove(symptom.getSymptomID());
+//	}
+//	
+//	public boolean removeSymptomID(int id){
+//		return symptomIDs.remove(id);
+//		
+//	}
 
-	public Set<Integer> getTriggerIDs() {
+	public int[] getTriggerIDs() {
 		return triggerIDs;
 	}
 
 
-	public void setTriggerIDs(Set<Integer> triggers) {
+	public void setTriggerIDs(int[] triggers) {
 		this.triggerIDs = triggers;
 	}
 	
 	public void addTriggerID(Trigger trigger){
-		triggerIDs.add(trigger.getTriggerID());
+		int length = this.triggerIDs.length;
+		int[] tempTriggers = new int[length+1];
+	    System.arraycopy(this.triggerIDs, 0, tempTriggers, 0, this.triggerIDs.length);
+	    tempTriggers[length] = trigger.getTriggerID();
+	    this.triggerIDs = tempTriggers;
 	}
 	
 	public void addTriggerID(int id){
-		triggerIDs.add(id);
+		int length = this.triggerIDs.length;
+		int[] tempTriggers = new int[length+1];
+	    System.arraycopy(this.triggerIDs, 0, tempTriggers, 0, this.triggerIDs.length);
+	    tempTriggers[length] = id;
+	    this.triggerIDs = tempTriggers;
 	}
 	
-	public boolean removeTriggerID(Trigger trigger){
-		return triggerIDs.remove(trigger.getTriggerID());
-	}
-	
-	public boolean removeTriggerID(int id){
-		return triggerIDs.remove(id);
-	}
+//	public boolean removeTriggerID(Trigger trigger){
+//		return triggerIDs.remove(trigger.getTriggerID());
+//	}
+//	
+//	public boolean removeTriggerID(int id){
+//		return triggerIDs.remove(id);
+//	}
 
 	public Object toJsonLD(){
 		try {
@@ -229,6 +253,7 @@ public class Headache implements Serializable {
 			result.append("headacheID", headacheID);
 			JSONArray intensVals = new JSONArray();
 			for (Pair pair : intensityValues) {
+				System.out.println("got Pair:"+pair);
 				intensVals.put(gson.toJson(pair));
 			}
 			result.append("intensityValues", intensVals);
@@ -261,50 +286,50 @@ public class Headache implements Serializable {
 	}
 
 
-	public void setLocations(JSONArray jsonObject) {
-		for(int i = 0; i < jsonObject.length(); i++){
-            try {
-				String key = jsonObject.getJSONObject(i).getString("location");
-				String value = jsonObject.getJSONObject(i).getString("value");
-	            locations.add(new Location());
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            
-        }
-		
-	}
+//	public void setLocations(JSONArray jsonObject) {
+//		for(int i = 0; i < jsonObject.length(); i++){
+//            try {
+//				String key = jsonObject.getJSONObject(i).getString("location");
+//				String value = jsonObject.getJSONObject(i).getString("value");
+//	            locations.add(new Location());
+//			} catch (JSONException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//            
+//        }
+//		
+//	}
 
 
-	public void setSymptomIDs(JSONArray jsonArray) {
-		for(int i = 0; i < jsonArray.length(); i++){
-            try {
-            	if(jsonArray.getJSONObject(i).getBoolean("val")){
-            		symptomIDs.add(jsonArray.getJSONObject(i).getInt("id"));
-            	}
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            
-        }
-		
-	}
+//	public void setSymptomIDs(JSONArray jsonArray) {
+//		for(int i = 0; i < jsonArray.length(); i++){
+//            try {
+//            	if(jsonArray.getJSONObject(i).getBoolean("val")){
+//            		symptomIDs.add(jsonArray.getJSONObject(i).getInt("id"));
+//            	}
+//			} catch (JSONException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//            
+//        }
+//		
+//	}
 	
-	public void setTriggerIDs(JSONArray jsonArray) {
-		for(int i = 0; i < jsonArray.length(); i++){
-            try {
-            	if(jsonArray.getJSONObject(i).getBoolean("val")){
-            		triggerIDs.add(jsonArray.getJSONObject(i).getInt("id"));
-            	}
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            
-        }
-		
-	}
+//	public void setTriggerIDs(JSONArray jsonArray) {
+//		for(int i = 0; i < jsonArray.length(); i++){
+//            try {
+//            	if(jsonArray.getJSONObject(i).getBoolean("val")){
+//            		triggerIDs.add(jsonArray.getJSONObject(i).getInt("id"));
+//            	}
+//			} catch (JSONException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//            
+//        }
+//		
+//	}
 }
 

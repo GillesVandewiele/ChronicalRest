@@ -1,4 +1,4 @@
-package be.ugent.entitity;
+ 	package be.ugent.entitity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -15,7 +15,7 @@ public class Medicine implements Serializable {
 	private int drugID;
 	
 	private String date;
-	private float quantity;
+	private double quantity;
 	
 		
 	public Medicine() {
@@ -63,12 +63,12 @@ public class Medicine implements Serializable {
 	}
 
 
-	public float getQuantity() {
+	public double getQuantity() {
 		return quantity;
 	}
 
 
-	public void setQuantity(float quantity) {
+	public void setQuantity(double quantity) {
 		this.quantity = quantity;
 	}
 

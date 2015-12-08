@@ -32,9 +32,12 @@ public class DBConnectionService {
 	
 	@GET
 	@Path("/status")
-	public Response getStatus() {
+	public Response getStatus(@HeaderParam("Authorization") String header) {
+		System.out.println("header:" + header);
+		if (!Authentication.isAuthorized(header)) {
+			return Response.status(403).build();
+		}
 		System.out.println("Database status opgevraagd");
-		Gson gson = new Gson();
 		try{
 			if(MongoDBSingleton.getInstance().isOnline("CHRONIC"))
 				return Response.ok().build();

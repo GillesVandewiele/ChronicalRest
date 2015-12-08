@@ -30,6 +30,10 @@ public class Pair implements Serializable {
 	}
 	
 	
+	public String toString(){
+		return key+":"+value;
+	}
+	
 	
 	
 	
