@@ -121,6 +121,7 @@ public class Headache implements Serializable {
 		Location[] tempLocations = new Location[length+1];
 	    System.arraycopy(this.locations, 0, tempLocations, 0, this.locations.length);
 	    tempLocations[length] = loc;
+	    this.locations = tempLocations;
 	}
 	
 //	public boolean removeLocation(Location loc){

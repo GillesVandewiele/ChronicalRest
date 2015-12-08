@@ -1,7 +1,9 @@
 package be.ugent.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -27,6 +29,7 @@ import be.ugent.Authentication;
 import be.ugent.dao.HeadacheDao;
 import be.ugent.dao.PatientDao;
 import be.ugent.entitity.Headache;
+import be.ugent.entitity.Location;
 import be.ugent.entitity.Pair;
 import be.ugent.entitity.Patient;
 
@@ -105,6 +108,16 @@ public class HeadacheService {
 			    toAdd.addSymptomID(Integer.parseInt(array.get(i).toString()));
 			}
 			
+			JSONObject locations = headacheJSON.getJSONObject("locations");
+			Iterator it = locations.keys();
+			while(it.hasNext()){
+				String loc = ""+it.next();
+				toAdd.addLocation(new Location(loc.toString(), (boolean)locations.get(loc)));
+				System.out.println("Location: "+loc.toString()+":"+locations.get(""+loc));
+				it.remove();
+			}
+			
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -114,6 +127,7 @@ public class HeadacheService {
 		
 		
 		toAdd.setHeadacheID(headacheDao.getNewHeadacheID());
+		System.out.println("Locations: "+Arrays.toString(toAdd.getLocations()));
 		
 		
 //		System.out.println("Created headache: "+JSON.parse(toAdd.toJSON().toString()));
