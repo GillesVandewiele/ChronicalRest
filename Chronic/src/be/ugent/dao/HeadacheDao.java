@@ -47,7 +47,7 @@ public class HeadacheDao {
 		DBCursor curs = collection.find(bdbo);
 		if(curs.count()>0)
 			return false;
-		bdbo.clear();
+		bdbo = new BasicDBObject();
 		System.out.println("Headache end:"+headache.getEnd());
 		bdbo.put("end", headache.getEnd());
 		curs = collection.find(bdbo);
