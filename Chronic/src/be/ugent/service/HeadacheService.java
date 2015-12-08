@@ -49,10 +49,10 @@ public class HeadacheService {
 	@Produces({ MediaType.TEXT_PLAIN })
 	public Response getHeadacheSemantics(@HeaderParam("Authorization") String header, @QueryParam("patientID") String patientID) {
 		if(patientID == null)
-			return Response.ok(headacheDao.getSemantics("<http://localhost:8080/Chronic/rest/HeadacheService/headaches>")).build();
+			return Response.ok(headacheDao.getSemantics("<http://tw06v033.ugent.be/Chronic/rest/HeadacheService/headaches>")).build();
 		
 		if(patientDao.getPatienFromId(patientID) != null)
-			return Response.ok(headacheDao.getSemantics("<http://localhost:8080/Chronic/rest/HeadacheService/headaches?patientID="+patientID+">")).build();
+			return Response.ok(headacheDao.getSemantics("<http://tw06v033.ugent.be/Chronic/rest/HeadacheService/headaches?patientID="+patientID+">")).build();
 		else
 			return Response.status(404).build();
 	}
