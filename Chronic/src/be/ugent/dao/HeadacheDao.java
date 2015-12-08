@@ -23,7 +23,7 @@ public class HeadacheDao {
 		DBCollection coll = db.getCollection("headache");
 		DBObject whereQuery = new BasicDBObject();
 		whereQuery.put("patientID", i);
-		DBCursor cursor = coll.find();
+		DBCursor cursor = coll.find(whereQuery);
 		List<Headache> list = new ArrayList<Headache>();
 		while (cursor.hasNext()) {
 			DBObject o = cursor.next();
