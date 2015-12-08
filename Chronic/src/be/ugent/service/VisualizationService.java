@@ -90,10 +90,10 @@ public class VisualizationService {
 			// \"description\": \"Test\"
 
 			String values = "{\"test\":\"test\", \"@id\":"
-					+ "\"http://localhost:8080/Chronic/rest/VisualizationService/sensors/headache_intensities?patientID="
+					+ "\"http://tw06v033.ugent.be/Chronic/rest/VisualizationService/sensors/headache_intensities?patientID="
 					+ patientID + "\"," + "\"description\":" + "\"Hoofdpijn Intensiteiten\" ," + "\"discrete\": \"true\","
 					+ "\"location\": \"" + "null\"," + "\"semantics\": \""+
-					"http://localhost:8080/Chronic/rest/VisualizationService/sensors/semantics/headache_intensities?patientID="+patientID+
+					"http://tw06v033.ugent.be/Chronic/rest/VisualizationService/sensors/semantics/headache_intensities?patientID="+patientID+
 					"\"," + "\"unit\": \"\"," + "\"value\": \""
 					+ (0 + rand.nextInt(11)) + "" + "\"}";
 			output += "," + values + "}";
@@ -141,10 +141,10 @@ public class VisualizationService {
 			// \"description\": \"Test\"
 
 			values = "{\"test\":\"test\", \"@id\":"
-					+ "\"http://localhost:8080/Chronic/rest/VisualizationService/sensors/headache_intensities?patientID="
+					+ "\"http://tw06v033.ugent.be/Chronic/rest/VisualizationService/sensors/headache_intensities?patientID="
 					+ integer + "\"," + "\"description\":" + "\"Hoofdpijn Intensiteiten\" ," + "\"discrete\": \"true\","
 					+ "\"location\": \"" + "null\"," + "\"semantics\": \""+
-					"http://localhost:8080/Chronic/rest/VisualizationService/sensors/semantics/headache_intensities?patientID="+integer+
+					"http://tw06v033.ugent.be/Chronic/rest/VisualizationService/sensors/semantics/headache_intensities?patientID="+integer+
 					"\"," + "\"unit\": \"\"," + "\"value\": \""
 					+ (0 + rand.nextInt(11)) + "" + "\"}";
 			output += "," + values + "}";
@@ -185,12 +185,12 @@ public class VisualizationService {
 		HeadacheDao headacheDao = new HeadacheDao();
 		if (patientID == null) {
 			return Response
-					.ok(headacheDao.getSemantics("<http://localhost:8080/Chronic/rest/VisualizationService/sensors/headache_intensities>"))
+					.ok(headacheDao.getSemantics("<http://tw06v033.ugent.be/Chronic/rest/VisualizationService/sensors/headache_intensities>"))
 					.build();
 		}
 		if (patientDao.getPatienFromId(patientID) != null)
 			return Response.ok(headacheDao.getSemantics(
-					"<http://localhost:8080/Chronic/rest/VisualizationService/sensors/headache_intensities?patientID=" + patientID + ">"))
+					"<http://tw06v033.ugent.be/VisualizationService/sensors/headache_intensities?patientID=" + patientID + ">"))
 					.build();
 		else
 			return Response.status(404).build();
