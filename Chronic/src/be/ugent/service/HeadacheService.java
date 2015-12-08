@@ -73,7 +73,7 @@ public class HeadacheService {
 
 	@POST
 	@Path("/headaches")
-	@Consumes({MediaType.TEXT_PLAIN})
+	@Consumes({MediaType.APPLICATION_JSON})
 	public Response addHeadache(String headache, @QueryParam("patientID") String patientID) {
 		
 //		System.out.println("header:"+header);
