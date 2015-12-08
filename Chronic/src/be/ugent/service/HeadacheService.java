@@ -83,6 +83,9 @@ public class HeadacheService {
 		if(headache == null || patientID==null || patientID.isEmpty()){
 			return Response.status(422).build();
 		}
+		if(Integer.parseInt(patientID)==Authentication.getPatientID(header)){
+			return Response.status(403).build();
+		}
 		JSONObject headacheJSON = null;
 		try {
 			headacheJSON = new JSONObject(headache);
