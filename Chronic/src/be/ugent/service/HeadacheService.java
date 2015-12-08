@@ -73,14 +73,19 @@ public class HeadacheService {
 
 	@POST
 	@Path("/headaches")
-	@Consumes({MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.TEXT_PLAIN})
 	public Response addHeadache(String headache, @QueryParam("patientID") String patientID) {
 		
-//		
-		if(headache == null || patientID==null || patientID.isEmpty()){
+//		System.out.println("header:"+header);
+//		if(!Authentication.isAuthorized(header)){
+//			return Response.status(403).build();
+//		}
+		if(headache == null || headache.isEmpty() || patientID==null || patientID.isEmpty()){
 			return Response.status(422).build();
 		}
-		
+//		if(Integer.parseInt(patientID)!=Authentication.getPatientID(header)){
+//			return Response.status(403).build();
+//		}
 		JSONObject headacheJSON = null;
 		try {
 			headacheJSON = new JSONObject(headache);
