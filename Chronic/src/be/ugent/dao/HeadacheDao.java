@@ -109,4 +109,19 @@ public class HeadacheDao {
 		collection.update(obj,dbObject);		
 		return true;
 	}
+
+	public Headache getHeadache(int headacheID) {
+		DBCollection coll = db.getCollection("headache");
+		DBObject whereQuery = new BasicDBObject();
+		whereQuery.put("headacheID", headacheID);
+		DBCursor cursor = coll.find(whereQuery);
+		if(cursor.count()>1)
+			return null;
+		Headache headache = null;
+		while (cursor.hasNext()) {
+			DBObject o = cursor.next();
+			headache = gson.fromJson(o.toString(), Headache.class);
+		}
+		return headache;
+	}
 }

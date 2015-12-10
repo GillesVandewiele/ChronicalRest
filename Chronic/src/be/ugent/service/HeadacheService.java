@@ -30,6 +30,7 @@ import be.ugent.dao.HeadacheDao;
 import be.ugent.dao.PatientDao;
 import be.ugent.entitity.Headache;
 import be.ugent.entitity.Location;
+import be.ugent.entitity.Medicine;
 import be.ugent.entitity.Pair;
 import be.ugent.entitity.Patient;
 
@@ -221,7 +222,43 @@ public class HeadacheService {
 		}
 	}
 
-	
+	@DELETE
+	@Path("/headaches/delete")
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Response deleteHeadache(@QueryParam("headacheID") String headacheID, @HeaderParam("Authorization") String header){
+		if(!Authentication.isAuthorized(header)){
+			return Response.status(403).build();
+		}				
+		Headache toAdd = headacheDao.getHeadache(Integer.parseInt(headacheID));
+		
+		if(toAdd == null){
+			return Response.status(404).build();
+		}
+		if(Authentication.getPatientID(header) != toAdd.getPatientID()){
+			return Response.status(403).build();
+		}
+		
+		
+		
+		if(toAdd == null){
+			return Response.status(422).build();
+		}
+		System.out.println("Got request to delete headache: "+gson.toJson(toAdd));
+		//if it's a headache that is not yet submitted to the database
+		if(toAdd.getHeadacheID()<0){
+			//headache given is already in database, but with wrong headacheID
+			return Response.status(404).build();
+			
+		}
+		
+		if(headacheDao.deleteHeadache(toAdd)){
+			//return headache successfully deleted
+			return Response.status(200).build();
+		}else{
+			//return record was already in database, or was wrong format
+			return Response.status(404).build();
+		}
+	}
 	
 	
 	
