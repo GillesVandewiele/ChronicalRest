@@ -167,7 +167,7 @@ public class MedicineDao {
 		return true;
 	}
 
-	public Object getMedicine(int medicineID, int patientID) {
+	public Medicine getMedicine(int medicineID, int patientID) {
 		DBCollection coll = db.getCollection("medicine");
 		BasicDBObject whereQuery = new BasicDBObject();
 		whereQuery.put("patientID", patientID);
@@ -178,7 +178,7 @@ public class MedicineDao {
 			DBObject o = cursor.next();
 			medicine = gson.fromJson(o.toString(), Medicine.class);
 		}
-		return medicine;
+		return (Medicine)medicine;
 	}
 	
 	public Object getMedicine(String date) {
