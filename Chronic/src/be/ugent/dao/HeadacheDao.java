@@ -48,12 +48,6 @@ public class HeadacheDao {
 		DBCursor curs = collection.find(bdbo);
 		if(curs.count()>0)
 			return false;
-		bdbo = new BasicDBObject();
-		System.out.println("Headache end:"+headache.getEnd());
-		bdbo.put("end", headache.getEnd());
-		curs = collection.find(bdbo);
-		if(curs.count()>0)
-			return false;
 		Gson genson = new Gson();
 		DBObject dbObject = (DBObject) JSON.parse(genson.toJson(headache));
 		collection.insert(dbObject);
