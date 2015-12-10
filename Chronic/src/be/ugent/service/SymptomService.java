@@ -56,7 +56,7 @@ public class SymptomService {
 		
 		if(symptomDao.addSymptom(toAdd)){
 			//return symptom successfully created
-			return Response.status(201).build();
+			return Response.status(201).entity(symptomDao.getSymptom(toAdd.getName())).build();
 		}else{
 			//return record was already in database, or was wrong format
 			return Response.status(409).build();
