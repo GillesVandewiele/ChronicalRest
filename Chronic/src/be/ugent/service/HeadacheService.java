@@ -111,6 +111,13 @@ public class HeadacheService {
 			    toAdd.addSymptomID(Integer.parseInt(array.get(i).toString()));
 			}
 			
+			array = headacheJSON.getJSONArray("triggerIDs");
+			for (int i=0; i<array.length(); i++) {
+				System.out.println("Adding triggerID:"+array.get(i).toString());
+			    toAdd.addTriggerID(Integer.parseInt(array.get(i).toString()));
+			}
+			
+			
 			JSONObject locations = headacheJSON.getJSONObject("locations");
 			Iterator it = locations.keys();
 			while(it.hasNext()){
