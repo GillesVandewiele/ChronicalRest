@@ -211,5 +211,26 @@ public class MedicineDao {
 		System.out.println("Done");
 		return true;
 	}
+
+	public boolean updateMedicine(String patientID, Medicine toAdd) {
+		DBCollection collection = db.getCollection("medicine");
+		// convert JSON to DBObject directly
+		BasicDBObject bdbo = new BasicDBObject();
+		bdbo.put("patientID", patientID);
+		bdbo.put("medicineID", toAdd.getMedicineID());
+		DBCursor curs = collection.find(bdbo);
+		if(curs.count()>1)
+			return false;
+		Gson genson = new Gson();
+		DBObject dbObject = (DBObject) JSON.parse(genson.toJson(toAdd));
+		collection.update(bdbo,dbObject);
+
+		DBCursor cursorDoc = collection.find();
+//		while (cursorDoc.hasNext()) {
+//			System.out.println(cursorDoc.next());
+//		}
+		System.out.println("Done");
+		return true;
+	}
 	
 }

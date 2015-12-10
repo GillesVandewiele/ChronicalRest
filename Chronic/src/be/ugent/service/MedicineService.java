@@ -62,40 +62,70 @@ public class MedicineService {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		System.out.println("object:"+medicineJSON);
-		Medicine toAdd = new Medicine();
-		try {
-			toAdd.setDate(medicineJSON.getString("date"));
-			toAdd.setDrugID(medicineJSON.getInt("drugID"));
-			toAdd.setQuantity(medicineJSON.getInt("quantity"));			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	
-		System.out.println("Got request to add medicine: "+toAdd);
 		
-		
-		toAdd.setMedicineID(medicineDao.getNewMedicineID());
-		
-		
-//		System.out.println("Created medicine: "+JSON.parse(toAdd.toJSON().toString()));
-		
-		//TODO return object with correct ID (now id will not be updated in the return object
-		toAdd.setPatientID(Integer.parseInt(patientID));
-		if(medicineDao.addMedicine(toAdd)){
-			//return medicine successfully created
+		Medicine test = gson.fromJson(medicine, Medicine.class);
+		if(test.getMedicineID()>0){
+			//Medicine is posted to update
+			Medicine toAdd = test;
+			toAdd.setPatientID(Integer.parseInt(patientID));
+			if(headacheDao.updateHeadacheForPatient(patient, toAdd)){
+				//return headache successfully created
+				return Response.status(202).entity(toAdd).build();
+			}else{
+//			return record was already in database, or was wrong format
+				return Response.status(400).build();
+			}
 			
+			if(medicineDao.updateMedicine(patientID, toAdd){
+				//return medicine successfully created
+				try {
+					return Response.status(202).entity(medicineDao.getMedicine(toAdd.getMedicineID(), Authentication.getPatientID(header))).build();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return Response.status(500).build();
+				}
+			}else{
+//				return record was already in database, or was wrong format
+				return Response.status(409).build();
+			}
+			
+		}else{
+			System.out.println("object:"+medicineJSON);
+			Medicine toAdd = new Medicine();
 			try {
-				return Response.status(201).entity(medicineDao.getMedicine(medicineJSON.get("date")+"")).build();
-			} catch (JSONException e) {
+				toAdd.setDate(medicineJSON.getString("date"));
+				toAdd.setDrugID(medicineJSON.getInt("drugID"));
+				toAdd.setQuantity(medicineJSON.getInt("quantity"));			
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				return Response.status(500).build();
 			}
-		}else{
-//			return record was already in database, or was wrong format
-			return Response.status(409).build();
+		
+			System.out.println("Got request to add medicine: "+toAdd);
+			
+			
+			toAdd.setMedicineID(medicineDao.getNewMedicineID());
+			
+			
+//			System.out.println("Created medicine: "+JSON.parse(toAdd.toJSON().toString()));
+			
+			//TODO return object with correct ID (now id will not be updated in the return object
+			toAdd.setPatientID(Integer.parseInt(patientID));
+			if(medicineDao.addMedicine(toAdd)){
+				//return medicine successfully created
+				
+				try {
+					return Response.status(201).entity(medicineDao.getMedicine(medicineJSON.get("date")+"")).build();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return Response.status(500).build();
+				}
+			}else{
+//				return record was already in database, or was wrong format
+				return Response.status(409).build();
+			}
 		}
 	}
 	
