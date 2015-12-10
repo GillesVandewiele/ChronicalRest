@@ -44,15 +44,8 @@ public class MedicineDao {
 		while (cursor.hasNext()) {
 			DBObject o = cursor.next();
 			Medicine medicine = new Medicine();
-			DateFormat df = new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy", Locale.ENGLISH);
-			Date result = null;
-		    try {
-				result =  df.parse(""+o.get("date"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} 
-			medicine.setDate(result+"");
+			String date =  ""+o.get("date");
+			medicine.setDate(date+"");
 			medicine.setDrugID(Integer.parseInt(""+o.get("medicineID")));
 			medicine.setMedicineID(Integer.parseInt(""+o.get("medicineID")));
 			medicine.setPatientID(patientID);
