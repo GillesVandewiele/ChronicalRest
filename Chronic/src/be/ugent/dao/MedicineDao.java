@@ -171,7 +171,7 @@ public class MedicineDao {
 		DBCollection coll = db.getCollection("medicine");
 		BasicDBObject whereQuery = new BasicDBObject();
 		whereQuery.put("patientID", patientID);
-		whereQuery.put("drugID", medicineID);
+		whereQuery.put("medicineID", medicineID);
 		DBCursor cursor = coll.find(whereQuery);
 		Medicine medicine = null;
 		while (cursor.hasNext()) {
