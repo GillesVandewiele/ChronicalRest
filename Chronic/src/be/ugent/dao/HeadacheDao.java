@@ -93,4 +93,20 @@ public class HeadacheDao {
 		}
 		return id;
 	}
+
+	public boolean updateHeadacheForPatient(Patient patient, Headache headache) {
+		DBCollection collection = db.getCollection("headache");
+		// convert JSON to DBObject directly
+		DBObject bdbo = new BasicDBObject();
+		bdbo.put("headacheID", headache.getHeadacheID());
+		DBCursor curs = collection.find(bdbo);
+		if(curs.count()>1)
+			return false;
+		DBObject obj = collection.findOne(bdbo);
+		
+		Gson genson = new Gson();
+		DBObject dbObject = (DBObject) JSON.parse(genson.toJson(headache));
+		collection.update(obj,dbObject);		
+		return true;
+	}
 }

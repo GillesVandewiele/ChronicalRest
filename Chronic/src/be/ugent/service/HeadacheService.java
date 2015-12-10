@@ -93,65 +93,131 @@ public class HeadacheService {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		System.out.println("object:"+headacheJSON);
-		Headache toAdd = new Headache();
 		try {
-			JSONArray array = headacheJSON.getJSONArray("intensityValues");
-			for (int i=0; i<array.length(); i++) {
-			    JSONObject item = array.getJSONObject(i);
-			    System.out.println("Item in intensityValues:"+item.toString());
-			    toAdd.addIntensityValue(item.getString("key"), item.getString("value"));
+			if(headacheJSON.getInt("headacheID")<1){
+				System.out.println("object:"+headacheJSON);
+				Headache toAdd = new Headache();
+				try {
+					JSONArray array = headacheJSON.getJSONArray("intensityValues");
+					for (int i=0; i<array.length(); i++) {
+					    JSONObject item = array.getJSONObject(i);
+					    System.out.println("Item in intensityValues:"+item.toString());
+					    toAdd.addIntensityValue(item.getString("key"), item.getString("value"));
+					}
+					
+					toAdd.setEnd(headacheJSON.getString("end"));
+					
+					array = headacheJSON.getJSONArray("symptomIDs");
+					for (int i=0; i<array.length(); i++) {
+						System.out.println("Adding symptomID:"+array.get(i).toString());
+					    toAdd.addSymptomID(Integer.parseInt(array.get(i).toString()));
+					}
+					
+					array = headacheJSON.getJSONArray("triggerIDs");
+					for (int i=0; i<array.length(); i++) {
+						System.out.println("Adding triggerID:"+array.get(i).toString());
+					    toAdd.addTriggerID(Integer.parseInt(array.get(i).toString()));
+					}
+					
+					
+					JSONObject locations = headacheJSON.getJSONObject("locations");
+					Iterator it = locations.keys();
+					while(it.hasNext()){
+						String loc = ""+it.next();
+						toAdd.addLocation(new Location(loc.toString(), (boolean)locations.get(loc)));
+						System.out.println("Location: "+loc.toString()+":"+locations.get(""+loc));
+						it.remove();
+					}
+					
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			
+				System.out.println("Got request to change headache: "+toAdd);
+				
+				
+				toAdd.setHeadacheID(headacheJSON.getInt("headacheID"));
+				System.out.println("Locations: "+Arrays.toString(toAdd.getLocations()));
+				
+				
+//				System.out.println("Created headache: "+JSON.parse(toAdd.toJSON().toString()));
+				
+				//TODO return object with correct ID (now id will not be updated in the return object
+				Patient patient = patientDao.getPatienFromId(patientID);
+				toAdd.setPatientID(Integer.parseInt(patientID));
+				if(headacheDao.updateHeadacheForPatient(patient, toAdd)){
+					//return headache successfully created
+					return Response.status(202).entity(toAdd).build();
+				}else{
+//					return record was already in database, or was wrong format
+					return Response.status(400).build();
+				}
 			}
-			
-			toAdd.setEnd(headacheJSON.getString("end"));
-			
-			array = headacheJSON.getJSONArray("symptomIDs");
-			for (int i=0; i<array.length(); i++) {
-				System.out.println("Adding symptomID:"+array.get(i).toString());
-			    toAdd.addSymptomID(Integer.parseInt(array.get(i).toString()));
+		} catch (JSONException e1) {
+			System.out.println("object:"+headacheJSON);
+			Headache toAdd = new Headache();
+			try {
+				JSONArray array = headacheJSON.getJSONArray("intensityValues");
+				for (int i=0; i<array.length(); i++) {
+				    JSONObject item = array.getJSONObject(i);
+				    System.out.println("Item in intensityValues:"+item.toString());
+				    toAdd.addIntensityValue(item.getString("key"), item.getString("value"));
+				}
+				
+				toAdd.setEnd(headacheJSON.getString("end"));
+				
+				array = headacheJSON.getJSONArray("symptomIDs");
+				for (int i=0; i<array.length(); i++) {
+					System.out.println("Adding symptomID:"+array.get(i).toString());
+				    toAdd.addSymptomID(Integer.parseInt(array.get(i).toString()));
+				}
+				
+				array = headacheJSON.getJSONArray("triggerIDs");
+				for (int i=0; i<array.length(); i++) {
+					System.out.println("Adding triggerID:"+array.get(i).toString());
+				    toAdd.addTriggerID(Integer.parseInt(array.get(i).toString()));
+				}
+				
+				
+				JSONObject locations = headacheJSON.getJSONObject("locations");
+				Iterator it = locations.keys();
+				while(it.hasNext()){
+					String loc = ""+it.next();
+					toAdd.addLocation(new Location(loc.toString(), (boolean)locations.get(loc)));
+					System.out.println("Location: "+loc.toString()+":"+locations.get(""+loc));
+					it.remove();
+				}
+				
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+		
+			System.out.println("Got request to add headache: "+toAdd);
 			
-			array = headacheJSON.getJSONArray("triggerIDs");
-			for (int i=0; i<array.length(); i++) {
-				System.out.println("Adding triggerID:"+array.get(i).toString());
-			    toAdd.addTriggerID(Integer.parseInt(array.get(i).toString()));
+			
+			toAdd.setHeadacheID(headacheDao.getNewHeadacheID());
+			System.out.println("Locations: "+Arrays.toString(toAdd.getLocations()));
+			
+			
+//			System.out.println("Created headache: "+JSON.parse(toAdd.toJSON().toString()));
+			
+			//TODO return object with correct ID (now id will not be updated in the return object
+			Patient patient = patientDao.getPatienFromId(patientID);
+			toAdd.setPatientID(Integer.parseInt(patientID));
+			if(headacheDao.addHeadacheForPatient(patient, toAdd)){
+				//return headache successfully created
+				return Response.status(201).entity(toAdd).build();
+			}else{
+//				return record was already in database, or was wrong format
+				return Response.status(409).build();
 			}
-			
-			
-			JSONObject locations = headacheJSON.getJSONObject("locations");
-			Iterator it = locations.keys();
-			while(it.hasNext()){
-				String loc = ""+it.next();
-				toAdd.addLocation(new Location(loc.toString(), (boolean)locations.get(loc)));
-				System.out.println("Location: "+loc.toString()+":"+locations.get(""+loc));
-				it.remove();
-			}
-			
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-	
-		System.out.println("Got request to add headache: "+toAdd);
+		return Response.status(500).build();
 		
-		
-		toAdd.setHeadacheID(headacheDao.getNewHeadacheID());
-		System.out.println("Locations: "+Arrays.toString(toAdd.getLocations()));
-		
-		
-//		System.out.println("Created headache: "+JSON.parse(toAdd.toJSON().toString()));
-		
-		//TODO return object with correct ID (now id will not be updated in the return object
-		Patient patient = patientDao.getPatienFromId(patientID);
-		toAdd.setPatientID(Integer.parseInt(patientID));
-		if(headacheDao.addHeadacheForPatient(patient, toAdd)){
-			//return headache successfully created
-			return Response.status(201).entity(toAdd).build();
-		}else{
-//			return record was already in database, or was wrong format
-			return Response.status(409).build();
-		}
 	}
 
 	
