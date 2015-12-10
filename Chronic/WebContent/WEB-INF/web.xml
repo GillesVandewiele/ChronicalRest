@@ -23,7 +23,7 @@
 		</init-param>
 		<init-param>
 			<param-name>cors.supportedMethods</param-name>
-			<param-value>GET, POST, PUT, HEAD, OPTIONS</param-value>
+			<param-value>GET, POST, PUT, DELETE, HEAD, OPTIONS</param-value>
 		</init-param>
 	</filter>
 	<filter-mapping>
