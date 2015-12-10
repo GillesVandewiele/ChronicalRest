@@ -60,7 +60,7 @@ public class TriggerService {
 		System.out.println("Created User: "+gson.toJson(toAdd));
 		if(triggerDao.addTrigger(toAdd)){
 			//return Trigger successfully created
-			return Response.status(201).build();
+			return Response.status(201).entity(triggerDao.getTrigger(toAdd.getName())).build();
 		}else{
 			//return record was already in database, or was wrong format
 			return Response.status(409).build();
