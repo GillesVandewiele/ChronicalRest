@@ -144,6 +144,10 @@ public class MedicineService {
 			return Response.status(403).build();
 		}				
 		
+		if(Authentication.getPatientID(header) == medicine.getPatientID()){
+			return Response.status(403).build();
+		}
+		
 		Medicine toAdd = medicine;
 		
 		if(toAdd == null){
