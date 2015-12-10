@@ -68,19 +68,12 @@ public class MedicineService {
 			//Medicine is posted to update
 			Medicine toAdd = test;
 			toAdd.setPatientID(Integer.parseInt(patientID));
-			if(headacheDao.updateHeadacheForPatient(patient, toAdd)){
-				//return headache successfully created
-				return Response.status(202).entity(toAdd).build();
-			}else{
-//			return record was already in database, or was wrong format
-				return Response.status(400).build();
-			}
-			
-			if(medicineDao.updateMedicine(patientID, toAdd){
+						
+			if(medicineDao.updateMedicine(patientID, toAdd)){
 				//return medicine successfully created
 				try {
 					return Response.status(202).entity(medicineDao.getMedicine(toAdd.getMedicineID(), Authentication.getPatientID(header))).build();
-				} catch (JSONException e) {
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 					return Response.status(500).build();
