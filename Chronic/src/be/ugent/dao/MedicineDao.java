@@ -35,10 +35,10 @@ public class MedicineDao {
 	private MongoDBSingleton dbSingleton = MongoDBSingleton.getInstance();
 	private DB db = dbSingleton.getTestdb();
 
-	public List<Medicine> getAllMedicinesForPatient(Patient patient){
+	public List<Medicine> getAllMedicinesForPatient(int patientID){
 		DBCollection coll = db.getCollection("medicine");
 		BasicDBObject where = new BasicDBObject();
-		where.put("patientID", patient.getPatientID());
+		where.put("patientID", patientID);
 		DBCursor cursor = coll.find(where);
 		List<Medicine> list = new ArrayList<Medicine>();
 		while (cursor.hasNext()) {
@@ -55,7 +55,7 @@ public class MedicineDao {
 			medicine.setDate(result+"");
 			medicine.setDrugID(Integer.parseInt(""+o.get("medicineID")));
 			medicine.setMedicineID(Integer.parseInt(""+o.get("medicineID")));
-			medicine.setPatientID(patient.getPatientID());
+			medicine.setPatientID(patientID);
 			medicine.setQuantity(Float.parseFloat(""+o.get("quantity")));
 			list.add(medicine);
 		}
