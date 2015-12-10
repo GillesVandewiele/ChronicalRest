@@ -139,23 +139,24 @@ public class MedicineService {
 	@DELETE
 	@Path("/medicines/delete")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Response deleteMedicine(Medicine medicine, @HeaderParam("Authorization") String header){
+	public Response deleteMedicine(String medicine, @HeaderParam("Authorization") String header){
 		if(!Authentication.isAuthorized(header)){
 			return Response.status(403).build();
 		}				
+		Medicine toAdd = gson.fromJson(medicine, Medicine.class);
 		
-		if(Authentication.getPatientID(header) != medicine.getPatientID()){
+		if(Authentication.getPatientID(header) != toAdd.getPatientID()){
 			return Response.status(403).build();
 		}
 		
-		Medicine toAdd = medicine;
+		
 		
 		if(toAdd == null){
 			return Response.status(422).build();
 		}
 		System.out.println("Got request to delete medicine: "+gson.toJson(medicine));
 		//if it's a medicine that is not yet submitted to the database
-		if(medicine.getMedicineID()<0){
+		if(toAdd.getMedicineID()<0){
 			//medicine given is already in database, but with wrong medicineID
 			return Response.status(404).build();
 			
