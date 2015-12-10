@@ -12,6 +12,7 @@ import com.mongodb.util.JSON;
 
 import be.ugent.MongoDBSingleton;
 import be.ugent.entitity.Headache;
+import be.ugent.entitity.Medicine;
 import be.ugent.entitity.Patient;
 
 public class HeadacheDao {
@@ -123,5 +124,23 @@ public class HeadacheDao {
 			headache = gson.fromJson(o.toString(), Headache.class);
 		}
 		return headache;
+	}
+
+	public boolean deleteHeadache(Headache headache) {
+		DBCollection collection = db.getCollection("headache");
+		// convert JSON to DBObject directly
+		BasicDBObject bdbo = new BasicDBObject();
+		bdbo.put("headacheID", headache.getHeadacheID());
+		DBCursor curs = collection.find(bdbo);
+		if(curs.count()>1){
+			System.err.println("Multiple headaches in the database have the same id");
+			return false;
+		}
+		
+		BasicDBObject document = new BasicDBObject();
+		document.put("headacheID", headache.getHeadacheID());
+		collection.remove(document);
+		System.out.println("Done");
+		return true;
 	}
 }
