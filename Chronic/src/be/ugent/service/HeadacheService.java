@@ -94,7 +94,7 @@ public class HeadacheService {
 			e1.printStackTrace();
 		}
 		try {
-			if(headacheJSON.getInt("headacheID")<1){
+			if(headacheJSON.getInt("headacheID")>=1){
 				System.out.println("object:"+headacheJSON);
 				Headache toAdd = new Headache();
 				try {
