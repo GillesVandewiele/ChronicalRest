@@ -20,19 +20,17 @@ public class Patient implements Serializable {
 	private boolean isEmployed;
 	private String password;
 
-	public enum relation{
-		GETROUWD, IN_RELATIE, VRIJGEZEL
-	}
-	private relation relation;
+	public String relation;
+	
 	private String advice;
 	private String diagnosis;
 
-	public relation getRelation() {
+	public String getRelation() {
 		return relation;
 	}
 
 
-	public void setRelation(relation relation) {
+	public void setRelation(String relation) {
 		this.relation = relation;
 	}
 

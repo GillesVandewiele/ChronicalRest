@@ -20,7 +20,6 @@ import com.google.gson.Gson;
 import be.ugent.Authentication;
 import be.ugent.dao.PatientDao;
 import be.ugent.entitity.Patient;
-import be.ugent.entitity.Patient.relation;
 
 @Path("/PatientService")
 public class PatientService {
@@ -102,13 +101,7 @@ public class PatientService {
 		JSONObject userJSON = null;
 		try {
 			userJSON = new JSONObject(user);
-			if(userJSON.get("relation").equals("GETROUWD")){
-				toAdd.setRelation(relation.GETROUWD);
-			}else if(userJSON.get("relation").equals("IN RELATIE")){
-				toAdd.setRelation(relation.IN_RELATIE);
-			}else{
-				toAdd.setRelation(relation.VRIJGEZEL);
-			}
+			toAdd.setRelation(""+userJSON.get("relation"));
 			
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
@@ -139,13 +132,8 @@ public class PatientService {
 		JSONObject userJSON = null;
 		try {
 			userJSON = new JSONObject(user);
-			if(userJSON.get("relation").equals("GETROUWD")){
-				toAdd.setRelation(relation.GETROUWD);
-			}else if(userJSON.get("relation").equals("IN RELATIE")){
-				toAdd.setRelation(relation.IN_RELATIE);
-			}else{
-				toAdd.setRelation(relation.VRIJGEZEL);
-			}
+			toAdd.setRelation(""+userJSON.get("relation"));
+			
 			
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
