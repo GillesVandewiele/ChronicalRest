@@ -150,7 +150,7 @@ public class Patient implements Serializable {
 		"\"birthDate\":\""+birthDate+"\",\n"+
 				"\"isEmployed\":"+isEmployed+",\n"+
 		"\"password\":\""+password+"\",\n"+
-				"\"relation\":"+relation+",\n"+
+				"\"relation\":\""+relation+"\",\n"+
 		"\"advice\":\""+advice+"\",\n"+
 				"\"diagnosis\":\""+diagnosis+"\"\n"+
 		"}";

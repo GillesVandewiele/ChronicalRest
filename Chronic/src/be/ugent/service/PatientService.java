@@ -20,7 +20,7 @@ import com.google.gson.Gson;
 import be.ugent.Authentication;
 import be.ugent.dao.PatientDao;
 import be.ugent.entitity.Patient;
-
+ 
 @Path("/PatientService")
 public class PatientService {
 	PatientDao patientDao = new PatientDao();
