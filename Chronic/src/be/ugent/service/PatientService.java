@@ -12,6 +12,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import com.google.gson.Gson;
@@ -19,6 +20,7 @@ import com.google.gson.Gson;
 import be.ugent.Authentication;
 import be.ugent.dao.PatientDao;
 import be.ugent.entitity.Patient;
+import be.ugent.entitity.Patient.relation;
 
 @Path("/PatientService")
 public class PatientService {
@@ -97,15 +99,67 @@ public class PatientService {
 			PatientDao patientDao = new PatientDao();
 			toAdd.setPatientID(patientDao.getNewId());
 		}
+		JSONObject userJSON = null;
+		try {
+			userJSON = new JSONObject(user);
+			if(userJSON.get("relation").equals("GETROUWD")){
+				toAdd.setRelation(relation.GETROUWD);
+			}else if(userJSON.get("relation").equals("IN RELATIE")){
+				toAdd.setRelation(relation.IN_RELATIE);
+			}else{
+				toAdd.setRelation(relation.VRIJGEZEL);
+			}
+			
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 //		System.out.println("Patient to add:"+toAdd);
 		if(patientDao.storePatient(toAdd)){
 			//return patient successfully created
-			return Response.status(201).build();
+			return Response.status(201).entity(patientDao.getPatienFromId(toAdd.getPatientID()+"")).build();
 		}else{
 			//return record was already in database, or was wrong format
 			return Response.status(409).build();
 		}
 	}
 
+	@POST
+	@Path("/patients/update")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response changeUser(String user){
+		
+		System.out.println("Patient requested to change: "+user.toString());
+		Gson gson = new Gson();
+		Patient toAdd = gson.fromJson(user, Patient.class);
+		if(toAdd.getPatientID()<=0){
+			return Response.status(404).build();
+		}
+		
+		JSONObject userJSON = null;
+		try {
+			userJSON = new JSONObject(user);
+			if(userJSON.get("relation").equals("GETROUWD")){
+				toAdd.setRelation(relation.GETROUWD);
+			}else if(userJSON.get("relation").equals("IN RELATIE")){
+				toAdd.setRelation(relation.IN_RELATIE);
+			}else{
+				toAdd.setRelation(relation.VRIJGEZEL);
+			}
+			
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+//		System.out.println("Patient to add:"+toAdd);
+		if(patientDao.updatePatient(toAdd)){
+			//return patient successfully created
+			return Response.status(202).entity(toAdd.getPatientID()).build();
+		}else{
+			//return record was already in database, or was wrong format
+			return Response.status(409).build();
+		}
+	}
+	
 	
 }

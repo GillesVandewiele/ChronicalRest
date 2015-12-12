@@ -110,11 +110,13 @@ public class PatientDao {
 		if (patient == null) {
 			System.err.println("Patient == null to chec if isValidUser");
 			return false;
-		} else if (patient.getPatientID() >= 0) {
+		}else if(patient.getPatientID() <1){
+			return false;
+		}else if (patient.getPatientID() >= 1) {
 			whereQuery.put("patientID", patient.getPatientID());
 			DBCursor cursor = coll.find(whereQuery);
 			if (cursor.count() >= 1) {
-				System.out.println("Already a patient with this patientID");
+				System.out.println("More then one patient with this patientID");
 				return false;
 			}
 		}
@@ -183,6 +185,55 @@ public class PatientDao {
 		}
 		Integer[] temp = new Integer[ids.size()];
 		return ids.toArray(temp);
+	}
+
+	private boolean isValidUserToChange(Patient patient) {
+		DBCollection coll = db.getCollection("patient");
+		BasicDBObject whereQuery = new BasicDBObject();
+		if (patient == null) {
+			System.err.println("Patient == null to chec if isValidUser");
+			return false;
+		}else if(patient.getPatientID() <1){
+			return false;
+		}else if (patient.getPatientID() >= 1) {
+			whereQuery.put("patientID", patient.getPatientID());
+			DBCursor cursor = coll.find(whereQuery);
+			if (cursor.count() > 1) {
+				System.out.println("More then one patient with this patientID");
+				return false;
+			}
+		}
+
+		if (patient.getPatientID() < 0 || patient.getEmail() == null || patient.getEmail().equals("")
+				|| patient.getFirstName() == null || patient.getFirstName().isEmpty() || patient.getLastName() == null
+				|| patient.getLastName().isEmpty())
+			return false;
+		return true;
+
+	}
+	
+	public boolean updatePatient(Patient toAdd) {
+		if (isValidUserToChange(toAdd)) {
+			// doStore
+			
+			DBCollection collection = db.getCollection("patient");
+			// convert JSON to DBObject directly
+			BasicDBObject bdbo = new BasicDBObject();
+			bdbo.put("patientID", toAdd.getPatientID());
+			DBCursor curs = collection.find(bdbo);
+			if(curs.count()>1)
+				return false;
+			Gson genson = new Gson();
+			DBObject dbObject = (DBObject) JSON.parse(genson.toJson(toAdd));
+			collection.update(bdbo,dbObject);
+			
+			return true;
+		} else {
+			System.out.println("Error storing patient : Not a valid Patient object to store");
+			System.err.println("Error storing patient : Not a valid Patient object to store");
+			return false;
+		}
+
 	}
 
 }
