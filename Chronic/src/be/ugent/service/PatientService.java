@@ -106,6 +106,7 @@ public class PatientService {
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+			return Response.status(417).build();
 		}
 //		System.out.println("Patient to add:"+toAdd);
 		if(patientDao.storePatient(toAdd)){
