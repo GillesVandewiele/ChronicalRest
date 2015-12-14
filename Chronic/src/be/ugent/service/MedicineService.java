@@ -169,6 +169,7 @@ public class MedicineService {
 		Medicine toAdd = medicineDao.getMedicine(Integer.parseInt(medicineID), Authentication.getPatientID(header));
 		
 		if(toAdd == null){
+			System.out.println("toAdd is null, daarom 404");
 			return Response.status(404).build();
 		}
 		if(Authentication.getPatientID(header) != toAdd.getPatientID()){
