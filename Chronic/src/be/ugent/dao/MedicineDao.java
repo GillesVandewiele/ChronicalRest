@@ -98,8 +98,7 @@ public class MedicineDao {
 		DBCollection collection = db.getCollection("medicine");
 		// convert JSON to DBObject directly
 		BasicDBObject bdbo = new BasicDBObject();
-		bdbo.put("patientID", medicine.getPatientID());
-		bdbo.put("drugID", medicine.getDrugID());
+		bdbo.put("medicineID", medicine.getMedicineID());
 		DBCursor curs = collection.find(bdbo);
 		if(curs.count()>0)
 			return false;
