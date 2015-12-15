@@ -46,7 +46,7 @@ public class MedicineDao {
 			Medicine medicine = new Medicine();
 			String date =  ""+o.get("date");
 			medicine.setDate(date+"");
-			medicine.setDrugID(Integer.parseInt(""+o.get("medicineID")));
+			medicine.setDrugID(Integer.parseInt(""+o.get("drugID")));
 			medicine.setMedicineID(Integer.parseInt(""+o.get("medicineID")));
 			medicine.setPatientID(patientID);
 			medicine.setQuantity(Float.parseFloat(""+o.get("quantity")));
