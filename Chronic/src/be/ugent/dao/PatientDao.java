@@ -204,9 +204,7 @@ public class PatientDao {
 			}
 		}
 
-		if (patient.getPatientID() < 0 || patient.getEmail() == null || patient.getEmail().equals("")
-				|| patient.getFirstName() == null || patient.getFirstName().isEmpty() || patient.getLastName() == null
-				|| patient.getLastName().isEmpty())
+		if (patient.getPatientID() < 0 || patient.getEmail() == null || patient.getEmail().equals(""))
 			return false;
 		return true;
 
@@ -224,6 +222,9 @@ public class PatientDao {
 			if(curs.count()>1)
 				return false;
 			Gson genson = new Gson();
+			Patient oud = genson.fromJson(curs.next().toString(), Patient.class);
+			toAdd.setFirstName(oud.getFirstName());
+			toAdd.setLastName(oud.getLastName());
 			DBObject dbObject = (DBObject) JSON.parse(genson.toJson(toAdd));
 			collection.update(bdbo,dbObject);
 			
