@@ -11,6 +11,7 @@ public class Symptom implements Serializable {
 	private int symptomID;
 	private String name;
 	private String description;
+	private String category;
 		
 	public Symptom() {
 		// TODO Auto-generated constructor stub
@@ -39,6 +40,15 @@ public class Symptom implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	
 	
 	
 	
