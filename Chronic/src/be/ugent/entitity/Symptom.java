@@ -12,6 +12,7 @@ public class Symptom implements Serializable {
 	private String name;
 	private String description;
 	private String category;
+	private String duration;
 		
 	public Symptom() {
 		// TODO Auto-generated constructor stub
