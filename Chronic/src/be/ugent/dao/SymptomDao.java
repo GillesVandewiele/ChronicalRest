@@ -32,6 +32,7 @@ public class SymptomDao {
 			drug.setName(o.get("name")+"");
 			drug.setSymptomID(((int)o.get("symptomID")));
 			drug.setCategory(""+o.get("category"));
+			drug.setDuration("duration");
 			list.add(drug);
 		}
 		return list;

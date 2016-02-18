@@ -49,8 +49,13 @@ public class Symptom implements Serializable {
 	public void setCategory(String category) {
 		this.category = category;
 	}
-	
-	
-	
+
+	public String getDuration() {
+		return duration;
+	}
+
+	public void setDuration(String duration) {
+		this.duration = duration;
+	}	
 	
 }
