@@ -12,7 +12,7 @@ public class Symptom implements Serializable {
 	private String name;
 	private String description;
 	private String category;
-	private String duration;
+	private int duration;
 		
 	public Symptom() {
 		// TODO Auto-generated constructor stub
@@ -50,11 +50,11 @@ public class Symptom implements Serializable {
 		this.category = category;
 	}
 
-	public String getDuration() {
+	public int getDuration() {
 		return duration;
 	}
 
-	public void setDuration(String duration) {
+	public void setDuration(int duration) {
 		this.duration = duration;
 	}	
 	
