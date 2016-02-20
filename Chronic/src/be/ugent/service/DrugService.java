@@ -35,60 +35,13 @@ public class DrugService {
 	Gson gson = new Gson();
 	
 	@GET
-	@Path("/drugs/ld")
-	public Response getAllLDDrugs(){
-		// Open a valid json(-ld) input file
-		InputStream inputStream;
-		try {
-			// Read the file into an Object (The type of this object will be a List, Map, String, Boolean,
-			// Number or null depending on the root object in the file).
-			Drug drug = drugDao.getDrug("Aspirine");
-			System.out.println(gson.toJson(drug));
-			
-			Object jsonObject = gson.toJson(drug);
-			// Create a context JSON map containing prefixes and definitions
-			Map context = new HashMap();
-			// Customise context...
-			context.put("ex", "http://example.org/");
-//			context.put("description", value)
-			String graph = "\"@graph\": ["+
-					"{ \"@id\":\""+drug.getDrugID()+"\","+
-					"\"ex:description\":\""+drug.getDescription()+"\"}"+
-							"]";
-			
-			System.out.println(graph);
-			
-			
-			// Create an instance of JsonLdOptions with the standard JSON-LD options
-			JsonLdOptions options = new JsonLdOptions();
-			options.setUseNativeTypes(false);
-			// Customise options...
-			// Call whichever JSONLD function you want! (e.g. compact)
-			System.out.println("{"+"\"@context\": { \"description\": \"http://example.org/description\"},\"description\": \"Test\"}");
-			Object compact =JsonLdProcessor.expand(JSON.parse("{"+"\"@context\": { \"description\": \"http://example.org/description\"},\"description\": \"Test\"}")); 
-//					JsonLdProcessor.expand(JSON.parse(graph), context, options);
-			System.out.println(compact+"");
-			// Print out the result (or don't, it's your call!)
-//			System.out.println(JsonUtils.toPrettyString(compact));
-			return Response.ok(JsonUtils.toPrettyString(compact)).build();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}catch(IOException e){
-			e.printStackTrace();
-		} catch (JsonLdError e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return Response.serverError().build();
-	}
-
-	@GET
 	@Path("/drugs")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getAllDrugs() {
-		System.out.println("Get All drugs received");
+	public Response getAllDrugs(@HeaderParam("Authorization") String header) {
+		System.out.println("header:" + header);
+		if (!Authentication.isAuthorized(header)) {
+			return Response.status(403).build();
+		}
 		return Response.ok(drugDao.getAllDrugs()).build();
 	}
 

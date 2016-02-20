@@ -4,6 +4,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -61,7 +62,6 @@ public class PatientService {
 	@Path("/login")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response login(@HeaderParam("Authorization") String header) {
-		System.out.println("JAJAJAJA INGELOGD, MERCI GILLES, GOE GEDAAN!");
 		if(!Authentication.isAuthorized(header)){
 			return Response.status(403).build();
 		}		
@@ -85,7 +85,7 @@ public class PatientService {
 	
 
 
-	@POST
+	@PUT
 	@Path("/patients")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addUser(String user){
