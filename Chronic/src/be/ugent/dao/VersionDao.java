@@ -25,7 +25,7 @@ public class VersionDao {
 			DBObject o = cursor.next();
 			Version version = new Version();
 			version.setDescription(o.get("description")+"");
-			version.setVersionID(o.get("versionID"));
+			version.setVersionID(""+o.get("versionID"));
 			if(max.compareTo(version.getVersionID()) <= 0){
 				max = version.getVersionID();
 			}
