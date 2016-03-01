@@ -1,5 +1,6 @@
 package be.ugent.service;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -25,8 +26,18 @@ public class VersionService {
 	@Path("/version")
 	@Produces({MediaType.APPLICATION_JSON})
 	public Response addVersion(Version version){
-		if(versionDao.addDrug(version))
+		if(versionDao.addVersion(version))
 			return Response.status(201).build();
+		else
+			return Response.status(409).build();
+	}
+	
+	@DELETE
+	@Path("/version")
+	@Produces({MediaType.APPLICATION_JSON})
+	public Response removeVersion(Version version){
+		if(versionDao.removeVersion(version))
+			return Response.status(200).build();
 		else
 			return Response.status(409).build();
 	}

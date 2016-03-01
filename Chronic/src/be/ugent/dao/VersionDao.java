@@ -33,7 +33,7 @@ public class VersionDao {
 		return max;
 	}
 	
-	public boolean addDrug(Version version){
+	public boolean addVersion(Version version){
 		
 		
 		DBCollection collection = db.getCollection("version");
@@ -52,6 +52,24 @@ public class VersionDao {
 			System.out.println(cursorDoc.next());
 		}
 
+		System.out.println("Done");
+		return true;
+	}
+
+	public boolean removeVersion(Version version) {
+		DBCollection collection = db.getCollection("version");
+		// convert JSON to DBObject directly
+		BasicDBObject bdbo = new BasicDBObject();
+		bdbo.put("versionID", version.getVersionID());
+		DBCursor curs = collection.find(bdbo);
+		if(curs.count()>1){
+			System.err.println("Multiple versions in the database have the same id");
+			return false;
+		}
+		
+		BasicDBObject document = new BasicDBObject();
+		document.put("versionID", version.getVersionID());
+		collection.remove(document);
 		System.out.println("Done");
 		return true;
 	}
