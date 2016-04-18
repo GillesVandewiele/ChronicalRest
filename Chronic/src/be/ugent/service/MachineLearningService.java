@@ -40,7 +40,7 @@ public class MachineLearningService {
 		Process p;
 		BufferedReader b = null;
 		try {
-			p = r.exec("python /home/kdlannoy/HeadacheClassifier/dts_cars.py");
+			p = r.exec("python /home/kdlannoy/HeadacheClassifier/genetic_iris.py");
 			p.waitFor();
 			b = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			String line = "";
