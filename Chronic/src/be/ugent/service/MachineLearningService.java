@@ -40,13 +40,14 @@ public class MachineLearningService {
 		Process p;
 		BufferedReader b = null;
 		try {
-			p = r.exec("python /home/kdlannoy/HeadacheClassifier/genetic_iris.py");
+			p = r.exec("python /home/kdlannoy/HeadacheClassifier/test.py");
 			p.waitFor();
 			b = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			String line = "";
 
 			while ((line = b.readLine()) != null) {
 			  retrieved += line;
+			  System.out.println(line);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
