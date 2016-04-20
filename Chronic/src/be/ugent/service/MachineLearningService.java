@@ -1,8 +1,11 @@
 package be.ugent.service;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -40,7 +43,7 @@ public class MachineLearningService {
 		Process p;
 		BufferedReader b = null;
 		try {
-			p = r.exec("python /home/kdlannoy/HeadacheClassifier/genetic_iris.py");
+			p = r.exec("python /home/kdlannoy/HeadacheClassifier/heart_cart_dt_to_json.py");
 			p.waitFor();
 			b = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			String line = "";
@@ -63,13 +66,26 @@ public class MachineLearningService {
 				e.printStackTrace();
 			}
 		}
-		
+		Gson gson = new Gson();
 
+		String s = "";
+		try (BufferedReader in = new BufferedReader(new FileReader("/home/kdlannoy/HeadacheClassifier/cart_tree_heart.json")))
+	    {
+	        s= in.lines().collect(Collectors.joining("\n"));
+	    } catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		
 //		System.out.println("Patient opgevraagd met naam: " + firstName + " " + lastName);
 		
 		
-		return Response.ok(retrieved+"").build();
+		return Response.ok(s+"").build();
 
 	}
 	

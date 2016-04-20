@@ -24,6 +24,8 @@ public class Patient implements Serializable {
 	
 	private String advice;
 	private int diagnoseID;
+	
+	private int isDocter;
 
 	public String getRelation() {
 		return relation;
@@ -161,6 +163,16 @@ public class Patient implements Serializable {
 	public String getFullName() {
 		// TODO Auto-generated method stub
 		return getFirstName()+" "+getLastName();
+	}
+
+
+	public int getIsDocter() {
+		return isDocter;
+	}
+
+
+	public void setIsDocter(int isDocter) {
+		this.isDocter = isDocter;
 	}
 	
 }

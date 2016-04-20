@@ -40,7 +40,6 @@ public class PatientService {
 		Patient retrieved = patientDao.getPatient(firstName, lastName);
 		retrieved.setPassword("");
 		return Response.ok(retrieved+"").build();
-
 	}
 	
 	
