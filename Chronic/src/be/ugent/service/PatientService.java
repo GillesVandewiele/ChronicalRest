@@ -163,12 +163,12 @@ public class PatientService {
 		Gson gson = new Gson();
 		Patient toAdd = null;
 		try {
-			JSONObject tuple = gson.fromJson(tupleID, JsonObject.class);
-			toAdd = patientDao.getPatienFromId(""+Integer.parseInt(tuple.getString("patientID")));
+			JsonObject tuple = gson.fromJson(tupleID, JsonObject.class);
+			toAdd = patientDao.getPatienFromId(""+Integer.parseInt(tuple.get("patientID").getAsString()));
 			if(toAdd.getPatientID()<=0){
 				return Response.status(404).build();
 			}
-			toAdd.setDiagnoseID(tuple.getInt("diagnoseID"));
+			toAdd.setDiagnoseID(tuple.get("diagnoseID").getAsInt());
 			
 		} catch (NumberFormatException | JSONException e) {
 			// TODO Auto-generated catch block
