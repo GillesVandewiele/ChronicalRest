@@ -153,18 +153,18 @@ public class PatientService {
 	
 	@POST
 	@Path("/patients/diagnose")
-	@Consumes("application/x-www-form-urlencoded")
-	public Response diagnoseUser(@FormParam("patientID") String patientID,@FormParam("diagnoseID") String diagnoseID,@HeaderParam("Authorization") String header) {
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response diagnoseUser(@FormParam("tupleID") JSONObject tupleID,@HeaderParam("Authorization") String header) {
 		if(!Authentication.isAuthorized(header)){
 			return Response.status(403).build();
 		}		
-		System.out.println("Patient requested to diagnose: "+patientID);
+		System.out.println("Patient requested to diagnose: "+tupleID);
 		Gson gson = new Gson();
-		Patient toAdd = patientDao.getPatientFromHeader(header);
+		Patient toAdd = patientDao.getPatienFromId(tupleID.getString("patientID"));
 		if(toAdd.getPatientID()<=0){
 			return Response.status(404).build();
 		}
-		toAdd.setDiagnoseID(Integer.parseInt(diagnoseID));
+		toAdd.setDiagnoseID(tupleID.getInt("diagnoseID"));
 		
 		if(patientDao.updatePatient(toAdd)){
 			//return patient successfully created
