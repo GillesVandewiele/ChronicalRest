@@ -18,6 +18,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import be.ugent.Authentication;
 import be.ugent.dao.PatientDao;
@@ -162,7 +163,7 @@ public class PatientService {
 		Gson gson = new Gson();
 		Patient toAdd = null;
 		try {
-			JSONObject tuple = gson.fromJson(tupleID, JSONObject.class);
+			JSONObject tuple = gson.fromJson(tupleID, JsonObject.class);
 			toAdd = patientDao.getPatienFromId(""+Integer.parseInt(tuple.getString("patientID")));
 			if(toAdd.getPatientID()<=0){
 				return Response.status(404).build();
