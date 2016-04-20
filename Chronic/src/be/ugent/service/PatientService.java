@@ -1,6 +1,7 @@
 package be.ugent.service;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -141,6 +142,30 @@ public class PatientService {
 			e1.printStackTrace();
 		}
 //		System.out.println("Patient to add:"+toAdd);
+		if(patientDao.updatePatient(toAdd)){
+			//return patient successfully created
+			return Response.status(202).entity(toAdd.getPatientID()).build();
+		}else{
+			//return record was already in database, or was wrong format
+			return Response.status(409).build();
+		}
+	}
+	
+	@POST
+	@Path("/patients/diagnose")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response diagnoseUser(@FormParam("patientID") String patientID,@FormParam("diagnoseID") String diagnoseID,@HeaderParam("Authorization") String header) {
+		if(!Authentication.isAuthorized(header)){
+			return Response.status(403).build();
+		}		
+		System.out.println("Patient requested to diagnose: "+patientID);
+		Gson gson = new Gson();
+		Patient toAdd = patientDao.getPatientFromHeader(header);
+		if(toAdd.getPatientID()<=0){
+			return Response.status(404).build();
+		}
+		toAdd.setDiagnoseID(Integer.parseInt(diagnoseID));
+		
 		if(patientDao.updatePatient(toAdd)){
 			//return patient successfully created
 			return Response.status(202).entity(toAdd.getPatientID()).build();

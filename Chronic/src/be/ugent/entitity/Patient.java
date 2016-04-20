@@ -23,7 +23,7 @@ public class Patient implements Serializable {
 	public String relation;
 	
 	private String advice;
-	private String diagnosis;
+	private int diagnoseID;
 
 	public String getRelation() {
 		return relation;
@@ -109,13 +109,13 @@ public class Patient implements Serializable {
 	}
 
 
-	public String getDiagnosis() {
-		return diagnosis;
+	public int getDiagnoseID() {
+		return diagnoseID;
 	}
 
 
-	public void setDiagnosis(String diagnosis) {
-		this.diagnosis = diagnosis;
+	public void setDiagnoseID(int diagnoseID) {
+		this.diagnoseID = diagnoseID;
 	}
 
 
@@ -152,7 +152,7 @@ public class Patient implements Serializable {
 		"\"password\":\""+password+"\",\n"+
 				"\"relation\":\""+relation+"\",\n"+
 		"\"advice\":\""+advice+"\",\n"+
-				"\"diagnosis\":\""+diagnosis+"\"\n"+
+				"\"diagnosis\":\""+diagnoseID+"\"\n"+
 		"}";
 		return returnString;
 	}
