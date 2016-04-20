@@ -160,11 +160,18 @@ public class PatientService {
 		}		
 		System.out.println("Patient requested to diagnose: "+tupleID);
 		Gson gson = new Gson();
-		Patient toAdd = patientDao.getPatienFromId(tupleID.getString("patientID"));
-		if(toAdd.getPatientID()<=0){
-			return Response.status(404).build();
+		Patient toAdd = null;
+		try {
+			toAdd = patientDao.getPatienFromId(""+Integer.parseInt(tupleID.getString("patientID")));
+			if(toAdd.getPatientID()<=0){
+				return Response.status(404).build();
+			}
+			toAdd.setDiagnoseID(tupleID.getInt("diagnoseID"));
+			
+		} catch (NumberFormatException | JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		toAdd.setDiagnoseID(tupleID.getInt("diagnoseID"));
 		
 		if(patientDao.updatePatient(toAdd)){
 			//return patient successfully created
