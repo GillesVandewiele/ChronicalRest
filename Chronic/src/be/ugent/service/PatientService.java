@@ -170,7 +170,7 @@ public class PatientService {
 			}
 			toAdd.setDiagnoseID(tuple.get("diagnoseID").getAsInt());
 			
-		} catch (NumberFormatException | JSONException e) {
+		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
