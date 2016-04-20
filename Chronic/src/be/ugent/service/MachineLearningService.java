@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
@@ -26,11 +27,16 @@ import org.codehaus.jettison.json.JSONObject;
 import com.google.gson.Gson;
 
 import be.ugent.Authentication;
+import be.ugent.dao.DecisionTreeDao;
+import be.ugent.entitity.DecisionTree;
 //import be.ugent.dao.MachineLearningDao;
 import be.ugent.entitity.Patient;
  
 @Path("/MachineLearningService")
 public class MachineLearningService {
+	
+	DecisionTreeDao decisionTreeDao = new DecisionTreeDao();
+	
 	@GET
 	@Path("/tree")
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -79,8 +85,12 @@ public class MachineLearningService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+		DecisionTree dt = new DecisionTree();
+		dt.setDokterID(0);
+		dt.setType("CART");
+		dt.setTimestamp(""+(new Date()));
+		dt.setJSON_repr(s);
+		decisionTreeDao.addDecisionTree(dt);
 		
 //		System.out.println("Patient opgevraagd met naam: " + firstName + " " + lastName);
 		
