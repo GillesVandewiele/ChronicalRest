@@ -154,7 +154,7 @@ public class PatientService {
 	@POST
 	@Path("/patients/diagnose")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response diagnoseUser(JSONObject tupleID,@HeaderParam("Authorization") String header) {
+	public Response diagnoseUser(String tupleID,@HeaderParam("Authorization") String header) {
 		if(!Authentication.isAuthorized(header)){
 			return Response.status(403).build();
 		}		
@@ -162,11 +162,12 @@ public class PatientService {
 		Gson gson = new Gson();
 		Patient toAdd = null;
 		try {
-			toAdd = patientDao.getPatienFromId(""+Integer.parseInt(tupleID.getString("patientID")));
+			JSONObject tuple = gson.fromJson(tupleID, JSONObject.class);
+			toAdd = patientDao.getPatienFromId(""+Integer.parseInt(tuple.getString("patientID")));
 			if(toAdd.getPatientID()<=0){
 				return Response.status(404).build();
 			}
-			toAdd.setDiagnoseID(tupleID.getInt("diagnoseID"));
+			toAdd.setDiagnoseID(tuple.getInt("diagnoseID"));
 			
 		} catch (NumberFormatException | JSONException e) {
 			// TODO Auto-generated catch block
