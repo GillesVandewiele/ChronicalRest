@@ -85,7 +85,7 @@ public class MachineLearningService {
 //		System.out.println("Patient opgevraagd met naam: " + firstName + " " + lastName);
 		
 		
-		return Response.ok(retrieved+" \n "+s+"").build();
+		return Response.ok("Retrieved print infor:\n"+retrieved+" \n\n\n\nFile content:\n"+s+"").build();
 
 	}
 	
