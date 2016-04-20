@@ -8,16 +8,11 @@ import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -29,8 +24,6 @@ import com.google.gson.Gson;
 import be.ugent.Authentication;
 import be.ugent.dao.DecisionTreeDao;
 import be.ugent.entitity.DecisionTree;
-//import be.ugent.dao.MachineLearningDao;
-import be.ugent.entitity.Patient;
  
 @Path("/MachineLearningService")
 public class MachineLearningService {
@@ -79,10 +72,15 @@ public class MachineLearningService {
 		try (BufferedReader in = new BufferedReader(new FileReader("/home/kdlannoy/HeadacheClassifier/cart_tree_heart.json")))
 	    {
 	        s= in.lines().collect(Collectors.joining("\n"));
+	        JSONObject rootObject = new JSONObject(s);
+	        s = rootObject.toString();
 	    } catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
