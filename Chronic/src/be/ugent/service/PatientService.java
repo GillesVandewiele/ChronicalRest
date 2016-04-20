@@ -154,7 +154,7 @@ public class PatientService {
 	@POST
 	@Path("/patients/diagnose")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response diagnoseUser(@FormParam("tupleID") JSONObject tupleID,@HeaderParam("Authorization") String header) {
+	public Response diagnoseUser(JSONObject tupleID,@HeaderParam("Authorization") String header) {
 		if(!Authentication.isAuthorized(header)){
 			return Response.status(403).build();
 		}		
