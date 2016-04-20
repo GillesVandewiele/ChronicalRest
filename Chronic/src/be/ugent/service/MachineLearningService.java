@@ -75,6 +75,7 @@ public class MachineLearningService {
 		Gson gson = new Gson();
 
 		String s = "";
+		System.out.println("reading from file: cart_tree_heart.json");
 		try (BufferedReader in = new BufferedReader(new FileReader("/home/kdlannoy/HeadacheClassifier/cart_tree_heart.json")))
 	    {
 	        s= in.lines().collect(Collectors.joining("\n"));
