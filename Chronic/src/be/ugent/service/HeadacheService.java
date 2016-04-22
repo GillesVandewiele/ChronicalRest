@@ -49,6 +49,20 @@ public class HeadacheService {
 	}
 	
 	@GET
+	@Path("/headachescount")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getHeadachesCount() {
+		System.out.println("Alle hoofdpijnen opgevraagd");
+		HashMap<Integer, Integer> countMap = (HashMap<Integer, Integer>) headacheDao.getHeadachesCount();
+		String result = "";
+		result += "ID\t\tcount";
+		for (Integer i : countMap.keySet()) {
+			result += i+"\t\t"+countMap.get(i);
+		}
+		return Response.ok(result).build();
+	}
+	
+	@GET
 	@Path("/headaches/semantics")
 	@Produces({ MediaType.TEXT_PLAIN })
 	public Response getHeadacheSemantics(@HeaderParam("Authorization") String header, @QueryParam("patientID") String patientID) {
