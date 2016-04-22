@@ -58,15 +58,15 @@ public class HeadacheService {
 	public Response getHeadachesCount() {
 		System.out.println("Alle hoofdpijnen opgevraagd");
 		HashMap<Integer, Integer> countMap = (HashMap<Integer, Integer>) headacheDao.getHeadachesCount();
-//		String result = "";
-//		result += "ID\t\tcount\n";
-//		Integer[] arr = (Integer[]) countMap.keySet().toArray();
-//		Arrays.sort(arr);
-//		for (Integer i : arr){
-//			result += i+"\t\t"+countMap.get(i)+"\n";
-//		}
-		return Response.ok(new PrettyPrintingMap<Integer,Integer>(countMap)).build();
-//		return Response.ok(result).build();
+		String result = "";
+		result += "ID\t\tcount\n";
+		
+		
+		for (Integer i : countMap.keySet()){
+			result += i+"\t\t"+countMap.get(i)+"\n";
+		}
+//		return Response.ok(new PrettyPrintingMap<Integer,Integer>(countMap)).build();
+		return Response.ok(result).build();
 	}
 	
 	@GET
