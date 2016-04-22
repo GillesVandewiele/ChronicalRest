@@ -49,9 +49,9 @@ public class HeadacheDao {
 			DBObject o = cursor.next();
 			Headache headache = gson.fromJson(o.toString(), Headache.class);
 			if(countMap.containsKey(headache.getPatientID())){
-				countMap.put(headache.getPatientID(),countMap.get(headache.getPatientID()));
+				countMap.put(headache.getPatientID(),countMap.get(headache.getPatientID())+1);
 			}else{
-				countMap.put(headache.getHeadacheID(), 1);
+				countMap.put(headache.getPatientID(), 1);
 			}
 		}
 		return countMap;
