@@ -2,6 +2,8 @@ package be.ugent.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -55,9 +57,11 @@ public class HeadacheService {
 		System.out.println("Alle hoofdpijnen opgevraagd");
 		HashMap<Integer, Integer> countMap = (HashMap<Integer, Integer>) headacheDao.getHeadachesCount();
 		String result = "";
-		result += "ID\t\tcount";
-		for (Integer i : countMap.keySet()) {
-			result += i+"\t\t"+countMap.get(i);
+		result += "ID\t\tcount\n";
+		Integer[] arr = (Integer[]) countMap.keySet().toArray();
+		Arrays.sort(arr);
+		for (Integer i : arr){
+			result += i+"\t\t"+countMap.get(i)+"\n";
 		}
 		return Response.ok(result).build();
 	}
