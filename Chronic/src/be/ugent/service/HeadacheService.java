@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -56,14 +58,15 @@ public class HeadacheService {
 	public Response getHeadachesCount() {
 		System.out.println("Alle hoofdpijnen opgevraagd");
 		HashMap<Integer, Integer> countMap = (HashMap<Integer, Integer>) headacheDao.getHeadachesCount();
-		String result = "";
-		result += "ID\t\tcount\n";
-		Integer[] arr = (Integer[]) countMap.keySet().toArray();
-		Arrays.sort(arr);
-		for (Integer i : arr){
-			result += i+"\t\t"+countMap.get(i)+"\n";
-		}
-		return Response.ok(result).build();
+//		String result = "";
+//		result += "ID\t\tcount\n";
+//		Integer[] arr = (Integer[]) countMap.keySet().toArray();
+//		Arrays.sort(arr);
+//		for (Integer i : arr){
+//			result += i+"\t\t"+countMap.get(i)+"\n";
+//		}
+		return Response.ok(new PrettyPrintingMap<Integer,Integer>(countMap)).build();
+//		return Response.ok(result).build();
 	}
 	
 	@GET
@@ -276,6 +279,31 @@ public class HeadacheService {
 			//return record was already in database, or was wrong format
 			return Response.status(404).build();
 		}
+	}
+	
+	public class PrettyPrintingMap<K, V> {
+	    private Map<K, V> map;
+
+	    public PrettyPrintingMap(Map<K, V> map) {
+	        this.map = map;
+	    }
+
+	    public String toString() {
+	        StringBuilder sb = new StringBuilder();
+	        Iterator<Entry<K, V>> iter = map.entrySet().iterator();
+	        while (iter.hasNext()) {
+	            Entry<K, V> entry = iter.next();
+	            sb.append(entry.getKey());
+	            sb.append('=').append('"');
+	            sb.append(entry.getValue());
+	            sb.append('"');
+	            if (iter.hasNext()) {
+	                sb.append(',').append(' ');
+	            }
+	        }
+	        return sb.toString();
+
+	    }
 	}
 	
 	
