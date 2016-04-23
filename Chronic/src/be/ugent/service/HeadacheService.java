@@ -76,7 +76,7 @@ public class HeadacheService {
 		result += "ID\t\tcount\n";
 		
 		
-		for (Integer i : patientIDs){
+		for (int i=0; i<patientIDs.size(); i++){
 			result += i+"\t\t"+counts.get(i)+"\n";
 		}
 		
