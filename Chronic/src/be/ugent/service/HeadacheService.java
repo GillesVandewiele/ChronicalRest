@@ -62,7 +62,7 @@ public class HeadacheService {
 		String message = "Beste,<br><br>Er heeft iemand de headachecount geraadpleegd.<br><br>Met vriendelijke groet,<br><br>De paashaas";
 		String[] toAddresses = {"kdlannoy@gmail.com"};
 		try {
-			TestClass.generateAndSendEmail("kdlannoy2", "eiy4vi7c",toAddresses , "Nieuwe headachecount geraadpleegd",message);
+			TestClass.generateAndSendEmail("kdlannoy2@gmail.com", "eiy4vi7c",toAddresses , "Nieuwe headachecount geraadpleegd",message);
 		} catch (AddressException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
