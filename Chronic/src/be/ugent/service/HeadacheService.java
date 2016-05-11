@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -30,6 +32,7 @@ import com.google.gson.Gson;
 import com.mongodb.util.JSON;
 
 import be.ugent.Authentication;
+import be.ugent.TestClass;
 import be.ugent.dao.HeadacheDao;
 import be.ugent.dao.PatientDao;
 import be.ugent.entitity.Headache;
@@ -56,6 +59,17 @@ public class HeadacheService {
 	@Path("/headachescount")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getHeadachesCount() {
+		String message = "Beste,<br><br>Er heeft iemand de headachecount geraadpleegd.<br><br>Met vriendelijke groet,<br><br>De paashaas";
+		String[] toAddresses = {"kdlannoy@gmail.com"};
+		try {
+			TestClass.generateAndSendEmail("kdlannoy@gmail.com", "eiy4vi7c",toAddresses , "Nieuwe headachecount geraadpleegd",message);
+		} catch (AddressException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println("Alle hoofdpijnen opgevraagd");
 		HashMap<Integer, Integer> countMap = (HashMap<Integer, Integer>) headacheDao.getHeadachesCount();
 		ArrayList<Integer> patientIDs = new ArrayList<>(countMap.keySet());
