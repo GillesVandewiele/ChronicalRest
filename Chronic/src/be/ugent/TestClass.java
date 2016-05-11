@@ -25,6 +25,7 @@ public class TestClass {
         mailServerProperties.put("mail.smtp.port", "587");
         mailServerProperties.put("mail.smtp.auth", "true");
         mailServerProperties.put("mail.smtp.starttls.enable", "true");
+        mailServerProperties.put("mail.debug.auth", "true");
         System.out.println("Mail Server Properties have been setup successfully..");
  
         // Step2
