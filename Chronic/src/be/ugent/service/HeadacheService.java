@@ -59,7 +59,7 @@ public class HeadacheService {
 	@Path("/headachescount")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getHeadachesCount() {
-		String message = "Beste,<br><br>Er heeft iemand de headachecount geraadpleegd.<br><br>Met vriendelijke groet,<br><br>De paashaas";
+		String message = "Beste,\n\nEr heeft iemand de headachecount geraadpleegd.\n\nMet vriendelijke groet,\n\nDe paashaas";
 		try {
 			TestClass.generateAndSendEmail("Nieuwe headachecount geraadpleegd",message);
 		} catch (AddressException e) {
