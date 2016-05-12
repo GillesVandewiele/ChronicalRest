@@ -7,7 +7,9 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
  
@@ -46,8 +48,17 @@ public class TestClass {
     	Runtime rt = Runtime.getRuntime();
     	try {
 			Process pr = rt.exec("mail -s \""+subject+"\" root@bigot.ugent.be <<< \""+message+"\"");
-			System.out.println("Proces output from mail: "+pr.getErrorStream()+"\n"+pr.getOutputStream());
-		} catch (IOException e) {
+			BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+			 
+            String line=null;
+
+            while((line=input.readLine()) != null) {
+                System.out.println("Mail output: "+line);
+            }
+
+            int exitVal = pr.waitFor();
+            System.out.println("Exited with error code "+exitVal);
+		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
