@@ -250,7 +250,7 @@ public class HeadacheService {
 	
 		System.out.println("Got request to add headache: "+toAdd);
 		
-		String message = "Beste,\n\nEr heeft iemand een nieuwe headache toegevoegd voor patient met patientID "+toAdd.getPatientID()+".\n\nMet vriendelijke groet,\n\nDe paashaas";
+		String message = "Beste,\n\nEr heeft iemand een nieuwe headache toegevoegd voor patient met patientID "+patientID+".\n\nMet vriendelijke groet,\n\nDe paashaas";
 		try {
 			TestClass.generateAndSendEmail("Nieuwe headache toegevoegd",message);
 		} catch (AddressException e) {
