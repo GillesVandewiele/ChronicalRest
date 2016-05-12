@@ -1,5 +1,7 @@
 package be.ugent.service;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -21,6 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import be.ugent.Authentication;
+import be.ugent.TestClass;
 import be.ugent.dao.PatientDao;
 import be.ugent.entitity.Patient;
  
@@ -112,6 +115,16 @@ public class PatientService {
 //		System.out.println("Patient to add:"+toAdd);
 		if(patientDao.storePatient(toAdd)){
 			//return patient successfully created
+			String message = "Beste,\n\nEr is een nieuwe patient die zich heeft geregistreerd.\n\nMet vriendelijke groet,\n\nDe paashaas";
+			try {
+				TestClass.generateAndSendEmail("Nieuwe patient geregistreerd",message);
+			} catch (AddressException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (MessagingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return Response.status(201).entity(patientDao.getPatienFromId(toAdd.getPatientID()+"")).build();
 		}else{
 			//return record was already in database, or was wrong format

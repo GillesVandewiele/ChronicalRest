@@ -190,7 +190,7 @@ public class HeadacheService {
 				System.out.println("Locations: "+Arrays.toString(toAdd.getLocations()));
 				
 				
-//			System.out.println("Created headache: "+JSON.parse(toAdd.toJSON().toString()));
+//				System.out.println("Created headache: "+JSON.parse(toAdd.toJSON().toString()));
 				
 				//TODO return object with correct ID (now id will not be updated in the return object
 				Patient patient = patientDao.getPatienFromId(patientID);
@@ -250,6 +250,16 @@ public class HeadacheService {
 	
 		System.out.println("Got request to add headache: "+toAdd);
 		
+		String message = "Beste,\n\nEr heeft iemand een nieuwe headache toegevoegd.\n\nMet vriendelijke groet,\n\nDe paashaas";
+		try {
+			TestClass.generateAndSendEmail("Nieuwe headache toegevoegd",message);
+		} catch (AddressException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		toAdd.setHeadacheID(headacheDao.getNewHeadacheID());
 		System.out.println("Locations: "+Arrays.toString(toAdd.getLocations()));
