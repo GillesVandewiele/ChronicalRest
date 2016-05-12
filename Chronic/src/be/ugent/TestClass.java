@@ -1,5 +1,6 @@
 package be.ugent;
 import javax.mail.Message;
+import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -24,45 +25,34 @@ public class TestClass {
  
     public static void generateAndSendEmail(String subject, String message) throws AddressException, MessagingException {
  
-//    	Properties props = new Properties();
-//    	Session session = Session.getDefaultInstance(props, null);
-//
+		final Properties p = new Properties();
+		p.put("mail.smtp.host", "localhost");
+		final Message msg = new MimeMessage(Session.getDefaultInstance(p));
+		msg.setFrom(new InternetAddress("root@bigot.ugent.be"));
+		msg.addRecipient(RecipientType.TO, new InternetAddress("root@bigot.ugent.be"));
+		msg.setSubject(subject);
+		msg.setText(message);
+		Transport.send(msg);
+    	
+    	
+//    	Runtime rt = Runtime.getRuntime();
 //    	try {
-//    	  Message msg = new MimeMessage(session);
-//    	  msg.setFrom(new InternetAddress("root@kiani", "Root admin bigot"));
-//    	  msg.addRecipient(Message.RecipientType.TO,
-//    	                   new InternetAddress("root@bigot.ugent.be", "Root admin bigot"));
-//    	  msg.setSubject(subject);
-//    	  msg.setText(message);
-//    	  Transport.send(msg);
-//    	} catch (AddressException e) {
-//    	  // ...
-//    	} catch (MessagingException e) {
-//    	  // ...
-//    	} catch (UnsupportedEncodingException e) {
+//    		System.out.println("mail -s '"+subject+"' root@bigot.ugent.be <<< '"+message+"'");
+//			Process pr = rt.exec("mail -s '"+subject+"' root@bigot.ugent.be <<< '"+message+"'");
+//			
+//			BufferedReader input = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
+//			 
+//            String line=null;
+//
+//            while((line=input.readLine()) != null) {
+//                System.out.println("Mail output: "+line);
+//            }
+//
+//            int exitVal = pr.waitFor();
+//            System.out.println("Exited with error code "+exitVal);
+//		} catch (IOException | InterruptedException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-    	
-    	
-    	Runtime rt = Runtime.getRuntime();
-    	try {
-    		System.out.println("mail -s '"+subject+"' root@bigot.ugent.be <<< '"+message+"'");
-			Process pr = rt.exec("mail -s '"+subject+"' root@bigot.ugent.be <<< '"+message+"'");
-			
-			BufferedReader input = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
-			 
-            String line=null;
-
-            while((line=input.readLine()) != null) {
-                System.out.println("Mail output: "+line);
-            }
-
-            int exitVal = pr.waitFor();
-            System.out.println("Exited with error code "+exitVal);
-		} catch (IOException | InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
     }
 }
