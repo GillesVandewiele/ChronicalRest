@@ -7,6 +7,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
  
@@ -21,22 +22,32 @@ public class TestClass {
  
     public static void generateAndSendEmail(String subject, String message) throws AddressException, MessagingException {
  
-    	Properties props = new Properties();
-    	Session session = Session.getDefaultInstance(props, null);
-
+//    	Properties props = new Properties();
+//    	Session session = Session.getDefaultInstance(props, null);
+//
+//    	try {
+//    	  Message msg = new MimeMessage(session);
+//    	  msg.setFrom(new InternetAddress("root@kiani", "Root admin bigot"));
+//    	  msg.addRecipient(Message.RecipientType.TO,
+//    	                   new InternetAddress("root@bigot.ugent.be", "Root admin bigot"));
+//    	  msg.setSubject(subject);
+//    	  msg.setText(message);
+//    	  Transport.send(msg);
+//    	} catch (AddressException e) {
+//    	  // ...
+//    	} catch (MessagingException e) {
+//    	  // ...
+//    	} catch (UnsupportedEncodingException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+    	
+    	
+    	Runtime rt = Runtime.getRuntime();
     	try {
-    	  Message msg = new MimeMessage(session);
-    	  msg.setFrom(new InternetAddress("root@kiani", "Root admin bigot"));
-    	  msg.addRecipient(Message.RecipientType.TO,
-    	                   new InternetAddress("root@bigot.ugent.be", "Root admin bigot"));
-    	  msg.setSubject(subject);
-    	  msg.setText(message);
-    	  Transport.send(msg);
-    	} catch (AddressException e) {
-    	  // ...
-    	} catch (MessagingException e) {
-    	  // ...
-    	} catch (UnsupportedEncodingException e) {
+			Process pr = rt.exec("mail -s \""+subject+"\" root@bigot.ugent.be <<< \""+message+"\"");
+			System.out.println("Proces output from mail: "+pr.getErrorStream()+"\n"+pr.getOutputStream());
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
