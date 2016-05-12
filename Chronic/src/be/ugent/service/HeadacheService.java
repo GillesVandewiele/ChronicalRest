@@ -59,17 +59,16 @@ public class HeadacheService {
 	@Path("/headachescount")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getHeadachesCount() {
-//		String message = "Beste,<br><br>Er heeft iemand de headachecount geraadpleegd.<br><br>Met vriendelijke groet,<br><br>De paashaas";
-//		String[] toAddresses = {"kdlannoy@gmail.com"};
-//		try {
-//			TestClass.generateAndSendEmail("kdlannoy2@gmail.com", "eiy4vi7c",toAddresses , "Nieuwe headachecount geraadpleegd",message);
-//		} catch (AddressException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (MessagingException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		String message = "Beste,<br><br>Er heeft iemand de headachecount geraadpleegd.<br><br>Met vriendelijke groet,<br><br>De paashaas";
+		try {
+			TestClass.generateAndSendEmail("Nieuwe headachecount geraadpleegd",message);
+		} catch (AddressException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println("Alle hoofdpijnen opgevraagd");
 		HashMap<Integer, Integer> countMap = (HashMap<Integer, Integer>) headacheDao.getHeadachesCount();
 		ArrayList<Integer> patientIDs = new ArrayList<>(countMap.keySet());
