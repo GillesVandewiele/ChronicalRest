@@ -47,7 +47,7 @@ public class TestClass {
     	
     	Runtime rt = Runtime.getRuntime();
     	try {
-			Process pr = rt.exec("mail -s \""+subject+"\" root@bigot.ugent.be <<< \""+message+"\"");
+			Process pr = rt.exec("mail -s '"+subject+"' root@bigot.ugent.be <<< '"+message+"'");
 			BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream()));
 			 
             String line=null;
