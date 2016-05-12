@@ -115,7 +115,7 @@ public class PatientService {
 //		System.out.println("Patient to add:"+toAdd);
 		if(patientDao.storePatient(toAdd)){
 			//return patient successfully created
-			String message = "Beste,\n\nEr is een nieuwe patient die zich heeft geregistreerd.\n\nMet vriendelijke groet,\n\nDe paashaas";
+			String message = "Beste,\n\nEr is een nieuwe patient die zich heeft geregistreerd met patientID "+toAdd.getPatientID()+".\n\nMet vriendelijke groet,\n\nDe paashaas";
 			try {
 				TestClass.generateAndSendEmail("Nieuwe patient geregistreerd",message);
 			} catch (AddressException e) {
