@@ -49,6 +49,7 @@ public class PatientService {
 	@Path("/patients/id")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getUser(@QueryParam("patientID") String patientID, @HeaderParam("Authorization") String header) {
+		System.out.println("Patient opgevraagd met id: "+patientID);
 		if(!Authentication.isAuthorized(header)){
 			return Response.status(403).build();
 		}
