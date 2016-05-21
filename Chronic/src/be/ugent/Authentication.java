@@ -42,6 +42,7 @@ public class Authentication {
 		DigestSHA3 md = new DigestSHA3(512); // same as DigestSHA3 md = new
 												// SHA3.Digest256();
 		if(patient==null){
+			System.out.println("Patient voor authentiactie bestaat niet");
 			return false;
 		}
 		try {
