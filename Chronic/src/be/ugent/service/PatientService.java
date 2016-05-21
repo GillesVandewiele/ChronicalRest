@@ -48,12 +48,13 @@ public class PatientService {
 	@GET
 	@Path("/patients")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getUser(@QueryParam("patientID") Integer patientID, @HeaderParam("Authorization") String header) {
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Response getUser(String patientID, @HeaderParam("Authorization") String header) {
 		if(!Authentication.isAuthorized(header)){
 			return Response.status(403).build();
 		}
 //		System.out.println("Patient opgevraagd met naam: " + firstName + " " + lastName);
-		Patient retrieved = patientDao.getPatient(patientID);
+		Patient retrieved = patientDao.getPatient(Integer.parseInt(patientID));
 		retrieved.setPassword("");
 		return Response.ok(retrieved+"").build();
 	}
