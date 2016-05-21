@@ -46,7 +46,7 @@ public class PatientService {
 	}
 	
 	@GET
-	@Path("/patients")
+	@Path("/patients/id")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getUser(@QueryParam("patientID") String patientID, @HeaderParam("Authorization") String header) {
 		if(!Authentication.isAuthorized(header)){
