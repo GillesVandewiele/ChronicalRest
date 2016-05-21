@@ -14,6 +14,7 @@ public class Authentication {
 	public static String APIKEY = "FiFoEdUdLOI4D19lj7Vb5pi72dDZf2aB";
 
 	public static boolean isAuthorized(String header) {
+		System.out.println("Checking authentication");
 		if(header == null){
 			System.out.println("Header for Authorization is null");
 			return false;
