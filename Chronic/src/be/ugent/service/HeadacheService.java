@@ -50,7 +50,10 @@ public class HeadacheService {
 	@GET
 	@Path("/headaches")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getAllHeadaches( @QueryParam("patientID") String patientID) {
+	public Response getAllHeadaches( @QueryParam("patientID") String patientID,@HeaderParam("Authorization") String header){
+		if(!Authentication.isAuthorized(header)){
+			return Response.status(403).build();
+		}				
 		System.out.println("Alle hoofdpijnen opgevraagd van patient met id:"+patientID);
 		return Response.ok(headacheDao.getAllHeadachesForPatient(Integer.parseInt(patientID))).build();
 	}
@@ -95,39 +98,15 @@ public class HeadacheService {
 		return Response.ok(result).build();
 	}
 	
-	@GET
-	@Path("/headaches/semantics")
-	@Produces({ MediaType.TEXT_PLAIN })
-	public Response getHeadacheSemantics(@HeaderParam("Authorization") String header, @QueryParam("patientID") String patientID) {
-		if(patientID == null)
-			return Response.ok(headacheDao.getSemantics("<http://tw06v033.ugent.be/Chronic/rest/HeadacheService/headaches>")).build();
-		
-		if(patientDao.getPatienFromId(patientID) != null)
-			return Response.ok(headacheDao.getSemantics("<http://tw06v033.ugent.be/Chronic/rest/HeadacheService/headaches?patientID="+patientID+">")).build();
-		else
-			return Response.status(404).build();
-	}
-	
-	@Path("/headaches/ld")
-	@Produces({ MediaType.APPLICATION_JSON })
-	@Consumes({MediaType.APPLICATION_JSON})
-	public Response getFirstHeadache( @QueryParam("patientID") String patientID) {
-		HeadacheDao headacheDao = new HeadacheDao();
-		Object jaja = headacheDao.getAllHeadachesForPatient(Integer.parseInt(patientID)).get(0).toJsonLD();
-		return Response.ok(jaja).build();
-		
-	}
-	
 
 	@POST
 	@Path("/headaches")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Response addHeadache(String headache, @QueryParam("patientID") String patientID) {
-		
-//		System.out.println("header:"+header);
-//		if(!Authentication.isAuthorized(header)){
-//			return Response.status(403).build();
-//		}
+	public Response addHeadache(String headache, @QueryParam("patientID") String patientID,@HeaderParam("Authorization") String header){
+		if(!Authentication.isAuthorized(header)){
+			return Response.status(403).build();
+		}				
+
 		if(headache == null || headache.isEmpty() || patientID==null || patientID.isEmpty()){
 			return Response.status(422).build();
 		}
