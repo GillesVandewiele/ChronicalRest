@@ -129,9 +129,9 @@ public class MedicineService {
 	@Path("/medicines/update")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Response changeMedicine(Medicine medicine,@HeaderParam("Authorization") String header){
-		if(!Authentication.isAuthorized(header)){
-			return Response.status(403).build();
-		}				
+//		if(!Authentication.isAuthorized(header)){
+//			return Response.status(403).build();
+//		}				
 		
 		Medicine toAdd = medicine;
 		
