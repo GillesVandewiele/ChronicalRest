@@ -103,9 +103,9 @@ public class HeadacheService {
 	@Path("/headaches")
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Response addHeadache(String headache, @QueryParam("patientID") String patientID,@HeaderParam("Authorization") String header){
-		if(!Authentication.isAuthorized(header)){
-			return Response.status(403).build();
-		}				
+//		if(!Authentication.isAuthorized(header)){
+//			return Response.status(403).build();
+//		}				
 
 		if(headache == null || headache.isEmpty() || patientID==null || patientID.isEmpty()){
 			return Response.status(422).build();
