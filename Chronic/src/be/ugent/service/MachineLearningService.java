@@ -134,7 +134,10 @@ public class MachineLearningService {
 		if(dokterID==0)
 			dokterID=-1;
 		
-		if(timestamp.isEmpty()){
+		if(type==null){
+			return Response.status(422).build();
+		}
+		if(timestamp==null||timestamp.isEmpty()){
 			return Response.ok(decisionTreeDao.getAllDecisionTrees(dokterID, type)).build();
 		}
 		return Response.ok(decisionTreeDao.getDecisionTree(timestamp, Authentication.getPatientID(header), type)).build();

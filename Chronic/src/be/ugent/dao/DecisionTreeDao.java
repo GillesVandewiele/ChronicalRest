@@ -103,7 +103,7 @@ public class DecisionTreeDao {
 		if(dokterID!=-1){
 			whereQuery.put("dokterID", dokterID);
 		}
-		if(!type.equals("all")){
+		if(type!=null && !type.equals("all")){
 			whereQuery.put("type", type);
 		}
 		DBCursor cursor = coll.find(whereQuery);
