@@ -143,7 +143,7 @@ public class MachineLearningService {
 	@PUT
 	@Path("/tree")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public Response addTree(JSONObject tree, @QueryParam("type") String type,@QueryParam("timestamp") String timestamp,@HeaderParam("Authorization") String header) {
+	public Response addTree(String tree, @QueryParam("type") String type,@QueryParam("timestamp") String timestamp,@HeaderParam("Authorization") String header) {
 		System.out.println("header:" + header);
 		if (!Authentication.isAuthorized(header)) {
 			return Response.status(403).build();
@@ -167,8 +167,7 @@ public class MachineLearningService {
 		toAdd.setJSON_repr(tree.toString());
 		toAdd.setTimestamp(timestamp);
 		toAdd.setType(type);
-		
-		System.out.println("Got request to add decisionTree: " + gson.toJson(tree));
+	
 
 		
 		System.out.println("Created decisionTree: " + gson.toJson(toAdd));
