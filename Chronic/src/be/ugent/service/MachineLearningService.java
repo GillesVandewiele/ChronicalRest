@@ -154,11 +154,11 @@ public class MachineLearningService {
 			return Response.status(422).build();
 		}
 
-		if(type.isEmpty()){
+		if(type==null || type.isEmpty()){
 			return Response.status(422).build();
 		}
 		
-		if(timestamp.isEmpty()){
+		if(timestamp==null || timestamp.isEmpty()){
 			timestamp = new Date()+"";
 		}
 		
