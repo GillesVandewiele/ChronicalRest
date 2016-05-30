@@ -112,7 +112,7 @@ public class MachineLearningService {
 			return Response.status(403).build();
 		}
 		
-		if(timestamp.isEmpty()){
+		if(timestamp==null||timestamp.isEmpty()||type==null){
 			//return all decision trees with other paramters applied
 			return Response.ok(decisionTreeDao.getAllDecisionTrees(-1, type)).build();
 		}
