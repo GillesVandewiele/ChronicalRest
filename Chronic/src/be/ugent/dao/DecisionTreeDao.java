@@ -98,7 +98,16 @@ public class DecisionTreeDao {
 	
 	public List<DecisionTree> getAllDecisionTrees(int dokterID, String type){
 		DBCollection coll = db.getCollection("decisionTree");
-		DBCursor cursor = coll.find();
+		
+		BasicDBObject whereQuery = new BasicDBObject();
+		if(dokterID!=-1){
+			whereQuery.put("dokterID", dokterID);
+		}
+		if(!type.equals("all")){
+			whereQuery.put("type", type);
+		}
+		DBCursor cursor = coll.find(whereQuery);
+		
 		List<DecisionTree> list = new ArrayList<DecisionTree>();
 		while (cursor.hasNext()) {
 			DBObject o = cursor.next();

@@ -8,8 +8,10 @@ import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -23,15 +25,18 @@ import com.google.gson.Gson;
 
 import be.ugent.Authentication;
 import be.ugent.dao.DecisionTreeDao;
+import be.ugent.dao.MachineLearningDao;
 import be.ugent.entitity.DecisionTree;
+import be.ugent.entitity.Drug;
  
 @Path("/MachineLearningService")
 public class MachineLearningService {
-	
+	Gson gson = new Gson();
 	DecisionTreeDao decisionTreeDao = new DecisionTreeDao();
+	MachineLearningDao machineLearningDao = new MachineLearningDao();
 	
 	@GET
-	@Path("/tree")
+	@Path("/go")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getTree(@QueryParam("treeType") String tree, @HeaderParam("Authorization") String header) {
 		if(!Authentication.isAuthorized(header)){
@@ -98,6 +103,83 @@ public class MachineLearningService {
 
 	}
 	
+	@GET
+	@Path("/tree/all")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getAllTrees(@QueryParam("type") String type,@QueryParam("timestamp") String timestamp,@HeaderParam("Authorization") String header) {
+		System.out.println("header:" + header);
+		if (!Authentication.isAuthorized(header)) {
+			return Response.status(403).build();
+		}
+		
+		if(timestamp.isEmpty()){
+			//return all decision trees with other paramters applied
+			return Response.ok(decisionTreeDao.getAllDecisionTrees(-1, type)).build();
+		}
+		
+		//if no timestamp is given, the docter can only check up on his own decision trees
+		return Response.ok(decisionTreeDao.getDecisionTree(timestamp, Authentication.getPatientID(header), type)).build();		
+	}
+	
+		
+	@GET
+	@Path("/tree")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getTree(@QueryParam("type") String type,@QueryParam("timestamp") String timestamp,@QueryParam("dokterID") int dokterID,@HeaderParam("Authorization") String header) {
+		System.out.println("header:" + header);
+		if (!Authentication.isAuthorized(header)) {
+			return Response.status(403).build();
+		}
+		
+		if(dokterID==0)
+			dokterID=-1;
+		
+		if(timestamp.isEmpty()){
+			return Response.ok(decisionTreeDao.getAllDecisionTrees(dokterID, type)).build();
+		}
+		return Response.ok(decisionTreeDao.getDecisionTree(timestamp, Authentication.getPatientID(header), type)).build();
+	}
+
+	@PUT
+	@Path("/tree")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response addTree(JSONObject tree, @QueryParam("type") String type,@QueryParam("timestamp") String timestamp,@HeaderParam("Authorization") String header) {
+		System.out.println("header:" + header);
+		if (!Authentication.isAuthorized(header)) {
+			return Response.status(403).build();
+		}
+		DecisionTree toAdd = new DecisionTree();
+		
+		if (toAdd == null) {
+			return Response.status(422).build();
+		}
+
+		if(type.isEmpty()){
+			return Response.status(422).build();
+		}
+		
+		if(timestamp.isEmpty()){
+			timestamp = new Date()+"";
+		}
+		
+		toAdd.setDokterID(Authentication.getPatientID(header));
+		toAdd.setJSON_repr(tree.toString());
+		toAdd.setTimestamp(timestamp);
+		toAdd.setType(type);
+		
+		System.out.println("Got request to add decisionTree: " + gson.toJson(tree));
+
+		
+		System.out.println("Created decisionTree: " + gson.toJson(toAdd));
+
+		if (decisionTreeDao.addDecisionTree(toAdd)) {
+			// return decisionTree successfully created
+			return Response.status(201).entity(decisionTreeDao.getDecisionTree(timestamp, Authentication.getPatientID(header), type)).build();
+		} else {
+			// return record was already in database, or was wrong format
+			return Response.status(409).build();
+		}
+	}
 	
 //	
 //	@GET
