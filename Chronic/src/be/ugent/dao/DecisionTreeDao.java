@@ -114,6 +114,7 @@ public class DecisionTreeDao {
 			DecisionTree decisionTree = new DecisionTree();
 			decisionTree.setDokterID(Integer.parseInt(""+o.get("dokterID")));
 			decisionTree.setType(o.get("type")+"");
+			decisionTree.setTimestamp(""+o.get("timestamp"));
 			decisionTree.setJSON_repr(""+o.get("JSON_repr"));
 			list.add(decisionTree);
 		}
