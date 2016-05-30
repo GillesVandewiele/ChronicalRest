@@ -163,6 +163,7 @@ public class MachineLearningService {
 		}
 		
 		toAdd.setDokterID(Authentication.getPatientID(header));
+		System.out.println("Got json tree:"+tree);
 		toAdd.setJSON_repr(tree.toString());
 		toAdd.setTimestamp(timestamp);
 		toAdd.setType(type);
