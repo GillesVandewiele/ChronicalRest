@@ -112,8 +112,9 @@ public class DecisionTreeDao {
 		while (cursor.hasNext()) {
 			DBObject o = cursor.next();
 			DecisionTree decisionTree = new DecisionTree();
-			decisionTree.setDokterID(dokterID);
-			decisionTree.setType(type);
+			decisionTree.setDokterID(Integer.parseInt(""+o.get("dokterID")));
+			decisionTree.setType(o.get("type")+"");
+			decisionTree.setJSON_repr(""+o.get("JSON_repr"));
 			list.add(decisionTree);
 		}
 		return list;
