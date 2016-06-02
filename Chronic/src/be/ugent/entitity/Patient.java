@@ -154,7 +154,7 @@ public class Patient implements Serializable {
 		"\"password\":\""+password+"\",\n"+
 				"\"relation\":\""+relation+"\",\n"+
 		"\"advice\":\""+advice+"\",\n"+
-				"\"diagnosis\":\""+diagnoseID+"\"\n"+
+				"\"diagnoseID\":\""+diagnoseID+"\"\n"+
 		"}";
 		return returnString;
 	}
