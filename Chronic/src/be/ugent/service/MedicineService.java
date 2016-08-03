@@ -36,7 +36,10 @@ public class MedicineService {
 	@GET
 	@Path("/medicines")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getAllMedicines( @QueryParam("patientID") String patientID) {
+	public Response getAllMedicines( @QueryParam("patientID") String patientID,@HeaderParam("Authorization") String header){
+		if(!Authentication.isAuthorized(header)){
+			return Response.status(403).build();
+		}				
 		System.out.println("Alle hoofdpijnen opgevraagd van patient met id:"+patientID);
 		return Response.ok(medicineDao.getAllMedicinesForPatient(Integer.parseInt(patientID))).build();
 	}
@@ -125,10 +128,10 @@ public class MedicineService {
 	@POST
 	@Path("/medicines/update")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Response changeMedicine(Medicine medicine) {
+	public Response changeMedicine(Medicine medicine,@HeaderParam("Authorization") String header){
 //		if(!Authentication.isAuthorized(header)){
 //			return Response.status(403).build();
-//		}		
+//		}				
 		
 		Medicine toAdd = medicine;
 		

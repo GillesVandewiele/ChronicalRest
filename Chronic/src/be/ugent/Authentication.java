@@ -14,6 +14,7 @@ public class Authentication {
 	public static String APIKEY = "FiFoEdUdLOI4D19lj7Vb5pi72dDZf2aB";
 
 	public static boolean isAuthorized(String header) {
+		System.out.println("Checking authentication");
 		if(header == null){
 			System.out.println("Header for Authorization is null");
 			return false;
@@ -42,6 +43,7 @@ public class Authentication {
 		DigestSHA3 md = new DigestSHA3(512); // same as DigestSHA3 md = new
 												// SHA3.Digest256();
 		if(patient==null){
+			System.out.println("Patient voor authentiactie bestaat niet");
 			return false;
 		}
 		try {

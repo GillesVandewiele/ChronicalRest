@@ -23,7 +23,9 @@ public class Patient implements Serializable {
 	public String relation;
 	
 	private String advice;
-	private String diagnosis;
+	private int diagnoseID;
+	
+	private int isDocter;
 
 	public String getRelation() {
 		return relation;
@@ -109,13 +111,13 @@ public class Patient implements Serializable {
 	}
 
 
-	public String getDiagnosis() {
-		return diagnosis;
+	public int getDiagnoseID() {
+		return diagnoseID;
 	}
 
 
-	public void setDiagnosis(String diagnosis) {
-		this.diagnosis = diagnosis;
+	public void setDiagnoseID(int diagnoseID) {
+		this.diagnoseID = diagnoseID;
 	}
 
 
@@ -152,7 +154,7 @@ public class Patient implements Serializable {
 		"\"password\":\""+password+"\",\n"+
 				"\"relation\":\""+relation+"\",\n"+
 		"\"advice\":\""+advice+"\",\n"+
-				"\"diagnosis\":\""+diagnosis+"\"\n"+
+				"\"diagnoseID\":\""+diagnoseID+"\"\n"+
 		"}";
 		return returnString;
 	}
@@ -161,6 +163,16 @@ public class Patient implements Serializable {
 	public String getFullName() {
 		// TODO Auto-generated method stub
 		return getFirstName()+" "+getLastName();
+	}
+
+
+	public int getIsDocter() {
+		return isDocter;
+	}
+
+
+	public void setIsDocter(int isDocter) {
+		this.isDocter = isDocter;
 	}
 	
 }

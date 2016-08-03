@@ -1,6 +1,9 @@
 package be.ugent.service;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -17,8 +20,10 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import be.ugent.Authentication;
+import be.ugent.TestClass;
 import be.ugent.dao.PatientDao;
 import be.ugent.entitity.Patient;
  
@@ -38,7 +43,20 @@ public class PatientService {
 		Patient retrieved = patientDao.getPatient(firstName, lastName);
 		retrieved.setPassword("");
 		return Response.ok(retrieved+"").build();
-
+	}
+	
+	@GET
+	@Path("/patients/id")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getUser(@QueryParam("patientID") String patientID, @HeaderParam("Authorization") String header) {
+		System.out.println("Patient opgevraagd met id: "+patientID);
+		if(!Authentication.isAuthorized(header)){
+			return Response.status(403).build();
+		}
+//		System.out.println("Patient opgevraagd met naam: " + firstName + " " + lastName);
+		Patient retrieved = patientDao.getPatient(Integer.parseInt(patientID));
+		retrieved.setPassword("");
+		return Response.ok(retrieved+"").build();
 	}
 	
 	
@@ -82,9 +100,6 @@ public class PatientService {
 		
 	}
 
-	
-
-
 	@PUT
 	@Path("/patients")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -111,6 +126,16 @@ public class PatientService {
 //		System.out.println("Patient to add:"+toAdd);
 		if(patientDao.storePatient(toAdd)){
 			//return patient successfully created
+			String message = "Beste,\n\nEr is een nieuwe patient die zich heeft geregistreerd met patientID "+toAdd.getPatientID()+".\n\nMet vriendelijke groet,\n\nDe paashaas";
+			try {
+				TestClass.generateAndSendEmail("Nieuwe patient geregistreerd",message);
+			} catch (AddressException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (MessagingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return Response.status(201).entity(patientDao.getPatienFromId(toAdd.getPatientID()+"")).build();
 		}else{
 			//return record was already in database, or was wrong format
@@ -141,6 +166,38 @@ public class PatientService {
 			e1.printStackTrace();
 		}
 //		System.out.println("Patient to add:"+toAdd);
+		if(patientDao.updatePatient(toAdd)){
+			//return patient successfully created
+			return Response.status(202).entity(toAdd.getPatientID()).build();
+		}else{
+			//return record was already in database, or was wrong format
+			return Response.status(409).build();
+		}
+	}
+	
+	@POST
+	@Path("/patients/diagnose")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response diagnoseUser(String tupleID,@HeaderParam("Authorization") String header) {
+		if(!Authentication.isAuthorized(header)){
+			return Response.status(403).build();
+		}		
+		System.out.println("Patient requested to diagnose: "+tupleID);
+		Gson gson = new Gson();
+		Patient toAdd = null;
+		try {
+			JsonObject tuple = gson.fromJson(tupleID, JsonObject.class);
+			toAdd = patientDao.getPatienFromId(""+Integer.parseInt(tuple.get("patientID").getAsString()));
+			if(toAdd.getPatientID()<=0){
+				return Response.status(404).build();
+			}
+			toAdd.setDiagnoseID(tuple.get("diagnoseID").getAsInt());
+			
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		if(patientDao.updatePatient(toAdd)){
 			//return patient successfully created
 			return Response.status(202).entity(toAdd.getPatientID()).build();

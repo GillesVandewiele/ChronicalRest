@@ -2,9 +2,15 @@ package be.ugent.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -26,6 +32,7 @@ import com.google.gson.Gson;
 import com.mongodb.util.JSON;
 
 import be.ugent.Authentication;
+import be.ugent.TestClass;
 import be.ugent.dao.HeadacheDao;
 import be.ugent.dao.PatientDao;
 import be.ugent.entitity.Headache;
@@ -43,44 +50,63 @@ public class HeadacheService {
 	@GET
 	@Path("/headaches")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getAllHeadaches( @QueryParam("patientID") String patientID) {
+	public Response getAllHeadaches( @QueryParam("patientID") String patientID,@HeaderParam("Authorization") String header){
+		if(!Authentication.isAuthorized(header)){
+			return Response.status(403).build();
+		}				
 		System.out.println("Alle hoofdpijnen opgevraagd van patient met id:"+patientID);
 		return Response.ok(headacheDao.getAllHeadachesForPatient(Integer.parseInt(patientID))).build();
 	}
 	
 	@GET
-	@Path("/headaches/semantics")
-	@Produces({ MediaType.TEXT_PLAIN })
-	public Response getHeadacheSemantics(@HeaderParam("Authorization") String header, @QueryParam("patientID") String patientID) {
-		if(patientID == null)
-			return Response.ok(headacheDao.getSemantics("<http://tw06v033.ugent.be/Chronic/rest/HeadacheService/headaches>")).build();
-		
-		if(patientDao.getPatienFromId(patientID) != null)
-			return Response.ok(headacheDao.getSemantics("<http://tw06v033.ugent.be/Chronic/rest/HeadacheService/headaches?patientID="+patientID+">")).build();
-		else
-			return Response.status(404).build();
-	}
-	
-	@Path("/headaches/ld")
+	@Path("/headachescount")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@Consumes({MediaType.APPLICATION_JSON})
-	public Response getFirstHeadache( @QueryParam("patientID") String patientID) {
-		HeadacheDao headacheDao = new HeadacheDao();
-		Object jaja = headacheDao.getAllHeadachesForPatient(Integer.parseInt(patientID)).get(0).toJsonLD();
-		return Response.ok(jaja).build();
+	public Response getHeadachesCount() {
+		String message = "Beste,\n\nEr heeft iemand de headachecount geraadpleegd.\n\nMet vriendelijke groet,\n\nDe paashaas";
+		try {
+			TestClass.generateAndSendEmail("Nieuwe headachecount geraadpleegd",message);
+		} catch (AddressException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Alle hoofdpijnen opgevraagd");
+		HashMap<Integer, Integer> countMap = (HashMap<Integer, Integer>) headacheDao.getHeadachesCount();
+		ArrayList<Integer> patientIDs = new ArrayList<>(countMap.keySet());
 		
+		Collections.sort(patientIDs);
+		
+		int viable_patients = 0;
+		for (Integer integer : countMap.keySet()) {
+			if(countMap.get(integer)>=5 && integer!=0){
+				viable_patients++;
+			}
+		}
+				
+		String result = "";
+		result += "ID\t\tcount\n";
+		
+		
+		for (Integer i : patientIDs){
+			result += i+"\t\t"+countMap.get(i)+"\n";
+		}
+		
+		result+="\n\n\nViable patients: "+viable_patients;
+//		return Response.ok(new PrettyPrintingMap<Integer,Integer>(countMap)).build();
+		return Response.ok(result).build();
 	}
 	
 
 	@POST
 	@Path("/headaches")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public Response addHeadache(String headache, @QueryParam("patientID") String patientID) {
-		
-//		System.out.println("header:"+header);
+	public Response addHeadache(String headache, @QueryParam("patientID") String patientID,@HeaderParam("Authorization") String header){
 //		if(!Authentication.isAuthorized(header)){
 //			return Response.status(403).build();
-//		}
+//		}				
+
 		if(headache == null || headache.isEmpty() || patientID==null || patientID.isEmpty()){
 			return Response.status(422).build();
 		}
@@ -143,7 +169,7 @@ public class HeadacheService {
 				System.out.println("Locations: "+Arrays.toString(toAdd.getLocations()));
 				
 				
-//			System.out.println("Created headache: "+JSON.parse(toAdd.toJSON().toString()));
+//				System.out.println("Created headache: "+JSON.parse(toAdd.toJSON().toString()));
 				
 				//TODO return object with correct ID (now id will not be updated in the return object
 				Patient patient = patientDao.getPatienFromId(patientID);
@@ -203,6 +229,16 @@ public class HeadacheService {
 	
 		System.out.println("Got request to add headache: "+toAdd);
 		
+		String message = "Beste,\n\nEr heeft iemand een nieuwe headache toegevoegd voor patient met patientID "+patientID+".\n\nMet vriendelijke groet,\n\nDe paashaas";
+		try {
+			TestClass.generateAndSendEmail("Nieuwe headache toegevoegd",message);
+		} catch (AddressException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		toAdd.setHeadacheID(headacheDao.getNewHeadacheID());
 		System.out.println("Locations: "+Arrays.toString(toAdd.getLocations()));
@@ -258,6 +294,31 @@ public class HeadacheService {
 			//return record was already in database, or was wrong format
 			return Response.status(404).build();
 		}
+	}
+	
+	public class PrettyPrintingMap<K, V> {
+	    private Map<K, V> map;
+
+	    public PrettyPrintingMap(Map<K, V> map) {
+	        this.map = map;
+	    }
+
+	    public String toString() {
+	        StringBuilder sb = new StringBuilder();
+	        Iterator<Entry<K, V>> iter = map.entrySet().iterator();
+	        while (iter.hasNext()) {
+	            Entry<K, V> entry = iter.next();
+	            sb.append(entry.getKey());
+	            sb.append('=').append('"');
+	            sb.append(entry.getValue());
+	            sb.append('"');
+	            if (iter.hasNext()) {
+	                sb.append(',').append(' ');
+	            }
+	        }
+	        return sb.toString();
+
+	    }
 	}
 	
 	

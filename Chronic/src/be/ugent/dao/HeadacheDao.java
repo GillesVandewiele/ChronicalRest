@@ -1,7 +1,10 @@
 package be.ugent.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -33,6 +36,27 @@ public class HeadacheDao {
 			list.add(headache);
 		}
 		return list;
+	}
+	
+	public Map<Integer, Integer> getHeadachesCount(){
+		Map<Integer, Integer> countMap = new HashMap<>();
+		DBCollection coll = db.getCollection("headache");
+		DBObject whereQuery = new BasicDBObject();
+		
+		DBCursor cursor = coll.find(whereQuery);
+		
+		while (cursor.hasNext()) {
+			DBObject o = cursor.next();
+			Headache headache = gson.fromJson(o.toString(), Headache.class);
+			if(countMap.containsKey(headache.getPatientID())){
+				countMap.put(headache.getPatientID(),countMap.get(headache.getPatientID())+1);
+			}else{
+				countMap.put(headache.getPatientID(), 1);
+			}
+		}
+		return countMap;
+		
+		
 	}
 	
 	public String getSemantics(String identity){
