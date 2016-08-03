@@ -1,5 +1,8 @@
 package be.ugent.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -8,7 +11,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.gson.Gson;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+
+import be.ugent.MongoDBSingleton;
 import be.ugent.dao.VersionDao;
+import be.ugent.entitity.Drug;
 import be.ugent.entitity.Version;
 
 @Path("/VersionService")
@@ -21,6 +32,29 @@ public class VersionService {
 		
 		return Response.ok(versionDao.getLatestVersion()).build();
 	}
+	
+	@GET
+	@Path("/verification")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getVerificationServices() {
+		MongoDBSingleton dbSingleton = MongoDBSingleton.getInstance();
+		DB db = dbSingleton.getTestdb();
+		Gson gson = new Gson();
+
+		
+		DBCollection coll = db.getCollection("verificationCode");
+		DBCursor cursor = coll.find();
+		List<String> list = new ArrayList<String>();
+		while (cursor.hasNext()) {
+			DBObject o = cursor.next();
+			String verifiactionCode = o.get("code")+"";
+			list.add(verifiactionCode);
+		}
+		return Response.ok(gson.toJson(list)).build();
+		
+		
+	}
+	
 	
 	@POST
 	@Path("/version")
